@@ -12,14 +12,23 @@ Python 3.10 or later. Only the plots need matplotlib.
 
 ```
 git clone https://github.com/canton-foundation/configs ../configs
-python3 src/extract.py ../configs     # data/snapshots.csv, data/beneficiaries.csv
-python3 src/lifecycle.py              # data/grants.csv, data/events.csv
-python3 src/deadlines.py              # data/deadlines.csv
 pip install matplotlib
-python3 src/dilution.py               # data/dilution.csv, figures/dilution.png
-python3 src/plot_weight_classes.py    # figures/weight-classes.png
-python3 src/plot_escrow_status.py     # figures/escrow-status.png
+./run.sh ../configs
 ```
+
+`run.sh` rebuilds every table and figure and then runs the consistency tests
+in `tests/`. `src/fetch_lighthouse.sh` refreshes the on-chain snapshots in
+`data/lighthouse/`.
+
+| Step | Script | Output |
+|---|---|---|
+| Weight history | `src/extract.py` | `data/snapshots.csv`, `data/beneficiaries.csv` |
+| Grant life cycle | `src/lifecycle.py` | `data/grants.csv`, `data/events.csv` |
+| Deadlines | `src/deadlines.py` | `data/deadlines.csv` |
+| Rewards | `src/dilution.py` | `data/dilution.csv`, `figures/dilution.png` |
+| Milestone mints | `src/mints.py` | `data/mint_votes.csv`, `data/mints.csv` |
+| Config against chain | `src/onchain_check.py` | `data/weight_votes.csv` |
+| Figures | `src/plot_*.py` | `figures/*.png` |
 
 ## Data
 
@@ -32,6 +41,10 @@ python3 src/plot_escrow_status.py     # figures/escrow-status.png
 | `data/cip_milestones.json` | Milestone deadlines extracted from the CIP texts |
 | `data/deadlines.csv` | Escrowed weight compared with those deadlines |
 | `data/dilution.csv` | CC per year for one unit of weight, and the escrowed share |
+| `data/mint_votes.csv` | Every on-chain vote to mint from the unclaimed pool |
+| `data/mints.csv` | Approved milestone mints per grant, against the model |
+| `data/weight_votes.csv` | Every executed weight vote, matched with the config commit |
 | `data/onchain/` | Live DSO state used to check node totals and read the issuance curve |
+| `data/lighthouse/` | Vote requests and rounds as indexed by Lighthouse, with the fetch time |
 
 See "Method and limits" in the article before relying on any number.
