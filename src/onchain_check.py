@@ -62,7 +62,16 @@ def main():
     return out
 
 
+def cip0111_votes():
+    """Every vote whose stated reason cites CIP-0111."""
+    votes = json.load(open(ROOT / "data" / "lighthouse" / "governance.json"))["vote_requests"]
+    return [(v["created_at"][:10], v["status"], v["action_kind"], (v.get("reason_body") or "")[:120])
+            for v in votes if "CIP-0111" in (v.get("reason_body") or "")]
+
+
 if __name__ == "__main__":
+    for v in cip0111_votes():
+        print("cites CIP-0111:", *v)
     out = main()
     lags = sorted(r["lag_days"] for r in out if r["lag_days"] != "")
     print(f"{len(out)} executed weight votes; {len(lags)} matched a config commit, "
