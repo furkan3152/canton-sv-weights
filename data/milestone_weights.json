@@ -1,5 +1,5 @@
 {
-  "about": "Maximum SV weight of each dated milestone, read by hand from the weight_earned text in cip_milestones.json (CIP texts at canton-foundation/cips 92df641). Only grants with escrowed weight on 2026-11-01 are listed. Undated milestones are omitted. 'Max +2' and 'up to +3' are recorded as their maximum.",
+  "about": "Maximum SV weight of each dated milestone, read by hand from the weight_earned text in cip_milestones.json (CIP texts at canton-foundation/cips 92df641). Only grants with escrowed weight on 2026-11-01 are listed, plus CIP-0125 (Paxos), whose escrow takes effect on 2026-11-12. Undated milestones are omitted. 'Max +2' and 'up to +3' are recorded as their maximum. CIP-0113 milestones are +0.5 infrastructure plus up to +1.5 activity each (2.0; 4 x 2.0 = the CIP's total of 8).",
   "weights": {
     "CIP-0060": {"D1": 2.5, "D2": 0.5, "D3": 0.5},
     "CIP-0065": {"D1": 1.5, "D2": 1.5, "D3": 1.5, "D8": 0},
@@ -20,10 +20,11 @@
     "CIP-0095": {"D1": 2, "D1a": 2},
     "CIP-0102": {"D1": 2, "D2": 2},
     "CIP-0106": {"D1": 0.5, "D2": 0.5, "D3": 4},
-    "CIP-0113": {"D1": 1.5, "D2": 1.5, "D3": 1.5, "D4": 1.5},
+    "CIP-0113": {"D1": 2.0, "D2": 2.0, "D3": 2.0, "D4": 2.0},
     "CIP-0115": {"1": 1, "2": 1, "3": 2, "4": 3, "5": 1},
     "CIP-0118": {"M1": 1, "M2": 1, "M3": 3},
-    "CIP-0122": {"1": 1, "2": 0.5, "3": 0.5, "4": 0.5, "5": 0.5, "6": 1}
+    "CIP-0122": {"1": 1, "2": 0.5, "3": 0.5, "4": 0.5, "5": 0.5, "6": 1},
+    "CIP-0125": {"D1": 3, "D2": 1, "D3": 1, "D4": 3}
   },
   "extensions": {
     "CIP-0060": "CIP-0099 (approved 2026-01-07) moved Zero Hash's adoption incentives (D4a-c) to start on 2026-04-01 and run for up to 24 months."

@@ -1218,8 +1218,8 @@
       "organisation": "DTCC",
       "status": "Approved",
       "created": "2025-10-01",
-      "approved": "TBD",
-      "approved_note": "Header says \"Approved: TBD\"; changelog says \"2025-10-06: Approved CIP\" (inconsistent). Status: Approved.",
+      "approved": "2025-10-06",
+      "approved_note": "Header says \"Approved: TBD\"; changelog: 2025-10-06 Approved CIP.",
       "max_total_weight": 10,
       "initial_escrowed_weight": 10,
       "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
@@ -1865,7 +1865,7 @@
       "organisation": "QCP Group",
       "status": "Approved",
       "created": "2026-02-01",
-      "approved": null,
+      "approved": "2026-03-05",
       "approved_note": "Header has no Approved field. Changelog: \"2026-02-01: Created\", \"2026-03-03: Updated\", \"2026-03-05: Approved\". Due dates computed from changelog approval 2026-03-05, with anchor not stated in table (assumed approval).",
       "max_total_weight": 5,
       "initial_escrowed_weight": 5,
@@ -2373,6 +2373,73 @@
         "milestone_count": 0,
         "earliest_absolute_due_date": null,
         "latest_absolute_due_date": null
+      }
+    },
+    {
+      "cip": "CIP-0125",
+      "title": "Add Paxos as a Super Validator (Weight 8.0)",
+      "organisation": "Paxos",
+      "status": "Approved",
+      "created": "2026-09-14",
+      "approved": "2026-09-22",
+      "approved_note": "Header: Created 2026-09-14, Approved 2026-09-22.",
+      "max_total_weight": 8,
+      "initial_escrowed_weight": 8,
+      "initial_escrowed_weight_basis": "\"An extraBeneficiary PartyID tied to an escrowed Super Validator will be configured by the Global Synchronizer Foundation (GSF) with the full maximum weight defined in this CIP.\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Stablecoin Native Integration",
+          "acceptance_criterion": "Integrate Paxos' stablecoin issuance platform natively on Canton and mint an aggregate of $20 million of major Paxos-issued stablecoins",
+          "deadline_text": "+6 months",
+          "anchor_type": "approval",
+          "anchor": "\"Deadline from CIP Approval\" (table header)",
+          "weight_earned": "+3",
+          "absolute_due_date": "2027-03-22"
+        },
+        {
+          "id": "D2",
+          "name": "Reserve Management MVP",
+          "acceptance_criterion": "Deliver a production MVP of stablecoin reserve management on Canton",
+          "deadline_text": "+9 months",
+          "anchor_type": "approval",
+          "anchor": "\"Deadline from CIP Approval\" (table header)",
+          "weight_earned": "+1",
+          "absolute_due_date": "2027-06-22"
+        },
+        {
+          "id": "D3",
+          "name": "Automated Mint/Redeem",
+          "acceptance_criterion": "Enable automated mint and redeem functionality for stablecoins managed by Paxos on Canton",
+          "deadline_text": "+12 months",
+          "anchor_type": "approval",
+          "anchor": "\"Deadline from CIP Approval\" (table header)",
+          "weight_earned": "+1",
+          "absolute_due_date": "2027-09-22"
+        },
+        {
+          "id": "D4",
+          "name": "Adoption Bonus (Mint/Redeem Volume)",
+          "acceptance_criterion": "+0.5 per $200 million minted on Canton or per $200 million average reserves held on Canton",
+          "deadline_text": "Within 24 months",
+          "anchor_type": "approval",
+          "anchor": "\"Deadline from CIP Approval\" (table header)",
+          "weight_earned": "Up to +3",
+          "absolute_due_date": "2028-09-22"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": null,
+      "consequence_clause_note": "Adoption Bonus weight is subject to a perpetual sustainment requirement; the Accountability Committee may apply a proportional reduction after a sustained drop in activity.",
+      "notes": [
+        "Added by hand on 2026-11-05 from cip-0125.md at canton-foundation/cips 92df641; the weight is not yet in the config file (on-chain vote effective 2026-11-12)."
+      ],
+      "confidentiality_quote": null,
+      "summary": {
+        "milestone_count": 4,
+        "earliest_absolute_due_date": "2027-03-22",
+        "latest_absolute_due_date": "2028-09-22"
       }
     },
     {

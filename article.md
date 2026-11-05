@@ -14,7 +14,7 @@ This piece builds that account from public data. I rebuilt the history of SV wei
 - **Rewards.** That weight has accrued about 1.74 billion CC since June 2025, and adds about 847 million CC per nominal year at today's issuance. The coins wait in the network's unclaimed-reward pool.
 - **Validation.** The method reproduces actual milestone payouts. For 19 paid grants, governance approved 521 million CC; the method gives 540 million.
 - **Outcomes.** Of 260.5 weight placed in escrow, 65.3 has been earned and 15.0 removed. Another 3.1 was released without being earned, and 177.1 is still escrowed.
-- **Deadlines.** Between 29.6 and 49.0 escrowed weight, across 11 grants, is tied to dated milestones that are past their deadline and not yet earned. CIP-0111 asks the Tokenomics Working Group to review exactly this case. So far the only removal of milestone weight on-chain is that of Monstera FZE and Woodside AI, in May 2026.
+- **Deadlines.** Between 30.1 and 49.5 escrowed weight, across 11 grants, is tied to dated milestones that are past their deadline and not yet earned. CIP-0111 asks the Tokenomics Working Group to review exactly this case. So far the only removal of milestone weight on-chain is that of Monstera FZE and Woodside AI, in May 2026.
 - **Record-keeping.** The on-chain pool records only an amount, so the escrow reserve exists only as an off-chain calculation.
 
 ## How SV rewards are paid
@@ -58,7 +58,7 @@ On 1 November 2026 the weight was split as follows:
 | Unassigned pool (`GhostSV-validator-1`) | 3.095 | 0.8% |
 | Total | 404.45 | |
 
-GSF hosts 97 of the escrowed weight on 20 parties, MPC Holding 53.125 on 7, and Five North 27 on 5. Escrow did not exist before 3 June 2025. It passed a third of all weight in November 2025 and has stayed between 31% and 45% since.
+GSF hosts 97 of the escrowed weight on 20 parties, MPC Holding 53.125 on 7, and Five North 27 on 5. A vote effective on 12 November 2026 adds a further 8 to GSF for Paxos (CIP-0125), which is not yet in these figures. Escrow did not exist before 3 June 2025. It passed a third of all weight in November 2025 and has stayed between 31% and 45% since.
 
 ## Where the escrowed rewards go
 
@@ -144,8 +144,8 @@ Most CIPs give each milestone a deadline, often "+180 days from CIP approval". M
 
 | Status | Grants | Escrowed weight |
 |---|---|---|
-| Tied to passed, dated milestones not yet earned (low bound) | 11 | 29.6 |
-| Other escrow of grants with a passed deadline | 15 | 51.4 |
+| Tied to passed, dated milestones not yet earned (low bound) | 11 | 30.1 |
+| Other escrow of grants with a passed deadline | 15 | 50.9 |
 | Milestones not published | 7 | 67.0 |
 | No dated deadline has passed yet | 5 | 29.1 |
 
@@ -156,6 +156,8 @@ Several grants that look overdue at first glance are not. Zero Hash, Zenith, Rep
 - Blockdaemon, 4;
 - the USDT0 issuer, 3;
 - Zodia Custody, 3.
+
+Part of this is acceleration bonus weight. Several CIPs pay a bonus on a sliding scale that falls to zero at the deadline (Zodia, Mesh, the USDT0 issuer, ChainSafe, Ledger), so once the deadline has passed, that part of the escrow can no longer be earned.
 
 These bounds depend on reading milestone weights from free text, and a few grants are irregular; ChainSafe's escrow, for example, was set below its CIP maximum. The full per-grant table is in `data/deadlines.csv`.
 

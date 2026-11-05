@@ -45,5 +45,10 @@ def main(last):
     print(len(out), "samples", out[0], out[-1])
 
 
+def latest_closed_round():
+    rounds = json.load(open(ROOT / "data" / "lighthouse" / "rounds.json"))["rounds"]
+    return max(r["round"] for r in rounds if r["status"] == "closed")
+
+
 if __name__ == "__main__":
-    main(int(sys.argv[1]) if len(sys.argv) > 1 else 120000)
+    main(int(sys.argv[1]) if len(sys.argv) > 1 else latest_closed_round())

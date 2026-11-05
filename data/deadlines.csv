@@ -15,9 +15,9 @@ CIP-0095,Mesh,2026-01-09,10.0,0.0,fully escrowed,4,2,2,2026-07-08,4,0.0,4.0,4,,F
 CIP-0065,"LayerZero Labs, Wormhole Labs, Chainlink (three applicants)",2025-07-14,4.5,4.1,partly earned,8,4,4,2026-07-14,4.5,4.1,0.4,4.5,,False,True,True
 CIP-0081,YZi Labs,2025-09-26,10.0,0.0,fully escrowed,1,1,1,2026-09-26,10,0.0,10.0,10.0,,True,True,True
 CIP-0094,Blockdaemon,2025-12-31,4.0,1.0,partly earned,3,3,3,2026-09-27,5,1.0,4.0,4.0,,False,True,True
-CIP-0113,Further Asset Management,2026-04-01,8.0,0.0,fully escrowed,4,4,1,2027-04-01,1.5,0.0,1.5,1.5,,False,True,False
-CIP-0106,QCP Group,,4.0,1.0,partly earned,3,3,2,2027-09-05,1.0,1.0,0.0,1.0,,False,True,False
-CIP-0083,DTCC,TBD,10.0,0.0,fully escrowed,0,0,0,,0,0.0,0.0,0,,True,False,False
+CIP-0113,Further Asset Management,2026-04-01,8.0,0.0,fully escrowed,4,4,1,2027-04-01,2.0,0.0,2.0,2.0,,False,True,False
+CIP-0106,QCP Group,2026-03-05,4.0,1.0,partly earned,3,3,2,2027-09-05,1.0,1.0,0.0,1.0,,False,True,False
+CIP-0083,DTCC,2025-10-06,10.0,0.0,fully escrowed,0,0,0,,0,0.0,0.0,0,,True,False,False
 CIP-0097,Nasdaq,2026-01-05,10.0,0.0,fully escrowed,0,0,0,,0,0.0,0.0,0,,True,False,False
 CIP-0109,Visa,2026-03-23,10.0,0.0,fully escrowed,0,0,0,,0,0.0,0.0,0,,True,False,False
 CIP-0110,Apollo,2026-03-24,7.0,0.0,fully escrowed,0,0,0,,0,0.0,0.0,0,,True,False,False
