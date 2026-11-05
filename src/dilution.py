@@ -22,7 +22,7 @@ Writes data/dilution.csv and figures/dilution.png.
 import csv
 import glob
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import matplotlib
@@ -34,6 +34,10 @@ ROOT = Path(__file__).resolve().parent.parent
 YEAR = timedelta(days=365)
 # Default of optDevelopmentFundPercentage in Issuance.daml (CIP-0082).
 DEV_FUND_DEFAULT = 0.05
+# CIP-0082 took effect with the Amulet 0.1.14 -> 0.1.15 package vote
+# (created 2026-02-09 by Digital-Asset-2, 12 accepts, effective at this time;
+# see data/lighthouse/governance.json). Before it, no fund share was deducted.
+DEV_FUND_START = datetime(2026, 2, 12, 19, 24, tzinfo=timezone.utc)
 
 
 def curve():
@@ -57,7 +61,7 @@ def curve():
 def sv_per_year(cfg, dev_fund):
     share = 1 - float(cfg["validatorRewardPercentage"]) - float(cfg["appRewardPercentage"])
     pct = cfg.get("optDevelopmentFundPercentage")
-    fund = float(pct) if pct is not None else dev_fund
+    fund = 0.0 if dev_fund == 0.0 else float(pct) if pct is not None else dev_fund
     return float(cfg["amuletToIssuePerYear"]) * (1 - fund) * share
 
 
@@ -79,7 +83,8 @@ def main():
     first = datetime.fromisoformat(snaps[0]["date"])
     points = sorted(
         [(datetime.fromisoformat(s["date"]), s) for s in snaps]
-        + [(when, None) for when, _ in steps if first < when < end],
+        + [(when, None) for when, _ in steps if first < when < end]
+        + [(DEV_FUND_START, None)],
         key=lambda p: p[0],
     )
     intervals, current = [], None
@@ -87,21 +92,18 @@ def main():
         current = snap or dict(current, date=when.isoformat())
         intervals.append(current)
 
-    out, cumulative, cumulative_upper = [], 0.0, 0.0
+    out, cumulative = [], 0.0
     for i, s in enumerate(intervals):
         start = datetime.fromisoformat(s["date"])
         stop = datetime.fromisoformat(intervals[i + 1]["date"]) if i + 1 < len(intervals) else end
         total = float(s["total"])
         ghost = float(s["escrow"]) + float(s["unassigned"])
         when, cfg = step_at(steps, start)
-        sv_year = sv_per_year(cfg, DEV_FUND_DEFAULT)
+        sv_year = sv_per_year(cfg, DEV_FUND_DEFAULT if start >= DEV_FUND_START else 0.0)
         per_unit = sv_year / total
         ghost_year = sv_year * ghost / total
         span = (stop - start) / YEAR
         cumulative += ghost_year * span
-        # The fund's activation date is not published; bound the history by
-        # assuming it was always on (lower) or never on (upper).
-        cumulative_upper += sv_per_year(cfg, 0.0) * ghost / total * span
         out.append({
             "date": s["date"], "commit": s["commit"], "total_weight": total,
             "ghost_weight": round(ghost, 4), "ghost_share": round(ghost / total, 4),
@@ -109,8 +111,7 @@ def main():
             "sv_tranche_cc_per_year": round(sv_year),
             "cc_per_weight_unit_per_year": round(per_unit),
             "ghost_cc_per_year": round(ghost_year),
-            "ghost_cc_cumulative_low": round(cumulative),
-            "ghost_cc_cumulative_high": round(cumulative_upper),
+            "ghost_cc_cumulative": round(cumulative),
         })
 
     with open(ROOT / "data" / "dilution.csv", "w", newline="") as f:
@@ -135,7 +136,7 @@ def main():
     ax.grid(axis="y", alpha=0.3)
     ax.legend(frameon=False, fontsize=9)
     fig.text(0.01, 0.01, "Sources: SV weight from canton-foundation/configs; issuance curve from "
-             "live AmuletRules; formula from Splice Issuance.daml (5% development fund applied throughout)",
+             "live AmuletRules; formula from Splice Issuance.daml (5% development fund from 12 Feb 2026)",
              fontsize=7, color="#666")
     fig.tight_layout(rect=(0, 0.03, 1, 1))
     fig.savefig(ROOT / "figures" / "dilution.png")
