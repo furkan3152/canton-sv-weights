@@ -16,11 +16,35 @@ one that has escrowed weight, so that the weight is not counted twice.
 """
 
 import csv
+import re
 from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 EPS = 1e-9
+
+
+FLOWS = ("escrow_granted", "earned_from_escrow", "earned_direct",
+         "released_unearned", "removed", "enforced", "restored")
+ENFORCEMENT = re.compile(r"CIP-?0105", re.I)
+ALIGNMENT = re.compile(r"align public extraBeneficiaries", re.I)
+
+
+def classify(de, da, before, subject):
+    """Name one change of a grant's escrowed (de) and active (da) weight."""
+    if ALIGNMENT.search(subject):
+        return "alignment"
+    if ENFORCEMENT.search(subject) and abs(de) < EPS:
+        return "enforcement"  # CIP-0105 lock enforcement or its reversal
+    if de < -EPS and da > EPS:
+        return "milestone"  # escrow released to an active party
+    if de < -EPS:
+        return "removal"
+    if de > EPS:
+        return "grant" if before < EPS else "increase"
+    if da > EPS:
+        return "earned-direct"  # earned weight added without an escrow release
+    return "active-reduction"
 
 
 def load():
@@ -64,23 +88,29 @@ def main():
         peak_escrow = max(e for _, e, _ in series)
         _, e_now, a_now = series[-1]
 
-        earned = reduced = 0.0
+        flows = dict.fromkeys(FLOWS, 0.0)
         prev_e = prev_a = 0.0
         for c, e, a in series:
             de, da = e - prev_e, a - prev_a
             if abs(de) > EPS or abs(da) > EPS:
-                kind = "grant"
-                if de < -EPS and da > EPS:
-                    kind = "milestone"  # escrow released to an active party
-                    earned += min(-de, da)
-                elif de < -EPS and (e + a) < (prev_e + prev_a) - EPS:
-                    kind = "reduction"
-                    reduced += (prev_e + prev_a) - (e + a)
-                elif de > EPS or da > EPS:
-                    kind = "grant" if prev_e + prev_a < EPS else "increase"
-                elif da < -EPS:
-                    kind = "active-reduction"
-                    reduced += -da
+                kind = classify(de, da, prev_e + prev_a, info[c]["subject"])
+                if kind == "grant" or kind == "increase":
+                    flows["escrow_granted"] += max(de, 0.0)
+                    flows["earned_direct"] += max(da, 0.0)
+                elif kind == "milestone":
+                    flows["earned_from_escrow"] += min(-de, da)
+                    flows["released_unearned"] += max(-de - da, 0.0)
+                    flows["earned_direct"] += max(da + de, 0.0)
+                elif kind == "removal":
+                    flows["removed"] += -de
+                    flows["enforced"] += max(-da, 0.0)
+                elif kind == "earned-direct":
+                    flows["earned_direct"] += da
+                elif kind in ("enforcement", "alignment"):
+                    flows["enforced"] += max(-da, 0.0)
+                    flows["restored"] += max(da, 0.0)
+                    flows["escrow_granted"] += max(de, 0.0)
+                    flows["removed"] += max(-de, 0.0)
                 events.append({
                     "cip": f"CIP-{cip}", "date": info[c]["date"][:10], "commit": c,
                     "kind": kind, "escrow_before": round(prev_e, 4),
@@ -88,6 +118,15 @@ def main():
                     "active_after": round(a, 4), "subject": info[c]["subject"],
                 })
             prev_e, prev_a = e, a
+
+        # Every unit of escrow either is still escrowed, was earned, was
+        # released without being earned, or was removed.
+        balance = flows["escrow_granted"] - e_now - flows["earned_from_escrow"] \
+            - flows["released_unearned"] - flows["removed"]
+        assert abs(balance) < 1e-6, (cip, flows, e_now)
+        active = flows["earned_from_escrow"] + flows["earned_direct"] \
+            - flows["enforced"] + flows["restored"]
+        assert abs(active - a_now) < 1e-6, (cip, flows, a_now)
 
         grants.append({
             "cip": f"CIP-{cip}",
@@ -97,8 +136,7 @@ def main():
             "peak_escrow": round(peak_escrow, 4),
             "escrow_now": round(e_now, 4),
             "active_now": round(a_now, 4),
-            "earned_by_milestones": round(earned, 4),
-            "reduced": round(reduced, 4),
+            **{k: round(v, 4) for k, v in flows.items()},
             "status": (
                 "fully escrowed" if a_now < EPS and e_now > EPS
                 else "partly earned" if a_now > EPS and e_now > EPS

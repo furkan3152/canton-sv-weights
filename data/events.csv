@@ -1,13 +1,13 @@
 cip,date,commit,kind,escrow_before,escrow_after,active_before,active_after,subject
 CIP-0052,2025-08-15,c7256dc,grant,0.0,5.0,0.0,0.0,"CIPs-0052-0059-0060 Add Zero Hash, Woodside AI, and Monstera FZE weights to the GSF SV node on MainNet (#167)"
-CIP-0052,2026-05-17,d362ee5,reduction,5.0,0.0,0.0,0.0,CIP-0111 Remove Monstera FZE and Woodside AI weights from the GSF SV node on MainNet [allow-total-reward-weight-change] (#361)
+CIP-0052,2026-05-17,d362ee5,removal,5.0,0.0,0.0,0.0,CIP-0111 Remove Monstera FZE and Woodside AI weights from the GSF SV node on MainNet [allow-total-reward-weight-change] (#361)
 CIP-0053,2025-06-11,a5d23e9,grant,0.0,2.5,0.0,0.0,CIP-0053 Add AngelHack weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#94)
 CIP-0053,2025-07-15,fd43d18,milestone,2.5,1.5,0.0,1.0,CIP-0053 Update AngelHack weight for the completed milestone (#129)
 CIP-0053,2025-11-27,7dd1590,milestone,1.5,0.0,1.0,2.5,CIP-0053 Update AngelHack weight for the completed milestone(s) (#257)
 CIP-0058,2025-06-03,8324919,grant,0.0,1.0,0.0,0.0,CIP-0058 Add IntellectEU weight to GSF SV [allow-total-reward-weight-change] (#84)
 CIP-0058,2025-08-07,56c8940,milestone,1.0,0.0,0.0,1.0,CIP-0058 Update IntellectEU weight for completed milestones (#162)
 CIP-0059,2025-08-15,c7256dc,grant,0.0,10.0,0.0,0.0,"CIPs-0052-0059-0060 Add Zero Hash, Woodside AI, and Monstera FZE weights to the GSF SV node on MainNet (#167)"
-CIP-0059,2026-05-17,d362ee5,reduction,10.0,0.0,0.0,0.0,CIP-0111 Remove Monstera FZE and Woodside AI weights from the GSF SV node on MainNet [allow-total-reward-weight-change] (#361)
+CIP-0059,2026-05-17,d362ee5,removal,10.0,0.0,0.0,0.0,CIP-0111 Remove Monstera FZE and Woodside AI weights from the GSF SV node on MainNet [allow-total-reward-weight-change] (#361)
 CIP-0060,2025-08-15,c7256dc,grant,0.0,7.5,0.0,0.0,"CIPs-0052-0059-0060 Add Zero Hash, Woodside AI, and Monstera FZE weights to the GSF SV node on MainNet (#167)"
 CIP-0060,2025-11-16,35c2e4f,milestone,7.5,4.5,0.0,3.0,CIP-0060 Update Zero Hash weight for the completed milestone(s) (#252)
 CIP-0060,2026-03-24,12a282c,milestone,4.5,4.0,3.0,3.5,Update Zero Hash and Ubyx weights for completed milestones (#308)
@@ -25,11 +25,11 @@ CIP-0065,2026-09-17,5711d2d,milestone,7.5,6.0,1.5,3.0,"CIP-0065 Layer Zero: earn
 CIP-0065,2026-09-17,3b70a9c,milestone,6.0,4.5,3.0,4.1,"CIP-0065 Wormhole: earned weight increase for a completed milestone (as per Tokenomics Meeting Outcomes Sep 2, 2026) (#392)"
 CIP-0069,2025-10-02,a8e328e,grant,0.0,5.0,0.0,0.0,"CIPs-0061-0065-0069-0077 Add Chainlink, Layer Zero, Wormhole, Ledger, and Taurus weights to the GSF SV node on MainNet (#202)"
 CIP-0069,2025-11-19,1a9726d,milestone,5.0,3.0,0.0,2.0,CIP-0069 Update Ledger weight for the completed milestone(s) (#253)
-CIP-0069,2026-05-10,28231e9,active-reduction,3.0,3.0,2.0,0.0,chore: align public extraBeneficiaries with the actual SV configurati… (#358)
-CIP-0069,2026-06-09,f51d62d,increase,3.0,3.0,0.0,2.0,CIP0105: revert SV weight enforcements for Elliptic and Ledger [allow… (#367)
+CIP-0069,2026-05-10,28231e9,alignment,3.0,3.0,2.0,0.0,chore: align public extraBeneficiaries with the actual SV configurati… (#358)
+CIP-0069,2026-06-09,f51d62d,enforcement,3.0,3.0,0.0,2.0,CIP0105: revert SV weight enforcements for Elliptic and Ledger [allow… (#367)
 CIP-0071,2025-08-24,67a2584,grant,0.0,5.0,0.0,0.0,CIP-0071 Add Ubyx weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#181)
 CIP-0071,2025-11-16,bc33866,milestone,5.0,2.05,0.0,2.95,CIP-0071 Update Ubyx weight for the completed milestone(s) (#251)
-CIP-0071,2026-01-12,06f6774,reduction,2.05,2.0,2.95,2.95,chore: align public extraBeneficiaries with the actual GSF configuration (#279)
+CIP-0071,2026-01-12,06f6774,alignment,2.05,2.0,2.95,2.95,chore: align public extraBeneficiaries with the actual GSF configuration (#279)
 CIP-0071,2026-03-24,12a282c,milestone,2.0,1.5,2.95,3.45,Update Zero Hash and Ubyx weights for completed milestones (#308)
 CIP-0072,2025-10-12,b5a5084,grant,0.0,5.0,0.0,0.0,CIPs-0072-0074 Add Fireblocks and BitGo weights to the GSF SV node on MainNet [allow-total-reward-weight-change] (#214)
 CIP-0072,2026-01-12,5fdfda2,milestone,5.0,2.0,0.0,2.08,CIP-0072 Update Fireblocks weight for the completed milestone(s) (#277)
@@ -41,9 +41,9 @@ CIP-0076,2025-09-23,9e1f868,grant,0.0,1.0,0.0,0.0,CIP-0076 Add Hypernative weigh
 CIP-0076,2026-01-12,b2a98f3,milestone,1.0,0.0,0.0,1.0,CIP-0076 Update Hypernative weight for the completed milestone (#278)
 CIP-0077,2025-10-02,a8e328e,grant,0.0,5.0,0.0,0.0,"CIPs-0061-0065-0069-0077 Add Chainlink, Layer Zero, Wormhole, Ledger, and Taurus weights to the GSF SV node on MainNet (#202)"
 CIP-0077,2025-12-21,d9c1338,milestone,5.0,2.0,0.0,3.0,CIP-0077 Update Taurus weight for the completed milestone(s) (#270)
-CIP-0077,2026-09-17,4666b43,active-reduction,2.0,2.0,3.0,1.8,CIP-0105: SV weight enforcements for Quantstamp and Taurus [allow-total-reward-weight-change] (#393)
-CIP-0077,2026-09-28,bdfd971,increase,2.0,2.0,1.8,3.0,CIP-0105: revert SV weight enforcements for Quantstamp and Taurus [allow-total-reward-weight-change] (#399)
-CIP-0077,2026-11-01,4b5dccb,active-reduction,2.0,2.0,3.0,1.8,CIP-0105: SV weight enforcements for DFNS and Taurus [allow-total-reward-weight-change] (#411)
+CIP-0077,2026-09-17,4666b43,enforcement,2.0,2.0,3.0,1.8,CIP-0105: SV weight enforcements for Quantstamp and Taurus [allow-total-reward-weight-change] (#393)
+CIP-0077,2026-09-28,bdfd971,enforcement,2.0,2.0,1.8,3.0,CIP-0105: revert SV weight enforcements for Quantstamp and Taurus [allow-total-reward-weight-change] (#399)
+CIP-0077,2026-11-01,4b5dccb,enforcement,2.0,2.0,3.0,1.8,CIP-0105: SV weight enforcements for DFNS and Taurus [allow-total-reward-weight-change] (#411)
 CIP-0080,2025-10-26,f2a8fc3,grant,0.0,6.0,0.0,0.0,CIPs-0075-0080 Add Zodia and Republic weights to the GSF SV node on M… (#227)
 CIP-0080,2025-11-16,eeeb1ac,milestone,6.0,3.0,0.0,3.0,CIP-0080 Update Republic weight for the completed milestone(s) (#248)
 CIP-0080,2025-12-21,fcc467e,milestone,3.0,2.5,3.0,3.5,CIP-0080 Update Republic weight for the completed milestone(s) (#271)
@@ -54,7 +54,7 @@ CIP-0085,2025-11-05,bf45ea1,grant,0.0,6.5,0.0,0.0,[CIP-0085] Add Talos weight to
 CIP-0085,2025-11-16,56720c7,milestone,6.5,4.0,0.0,2.5,"CIP-0085 Talos: earned weight increase for 3 completed milestones (as per Tokenomics Meeting Outcomes Nov 05, 2025 AND Nov 12, 2025) (#249)"
 CIP-0085,2026-02-09,2e3e643,milestone,4.0,1.0,2.5,5.4083,CIP-0085 Update Talos weight for the completed milestone (#297)
 CIP-0086,2026-04-11,b94ee3f,grant,0.0,2.0,0.0,0.0,correct weight field for extraBeneficiaries of 5n (#328)
-CIP-0086,2026-05-02,df32b97,increase,2.0,2.0,0.0,1.95,CIP-0086 Add Chainsafe weight for the completed milestone(s) on MainNet (#342)
+CIP-0086,2026-05-02,df32b97,earned-direct,2.0,2.0,0.0,1.95,CIP-0086 Add Chainsafe weight for the completed milestone(s) on MainNet (#342)
 CIP-0087,2025-12-03,11ca98e,grant,0.0,3.0,0.0,0.0,CIP-0087 Add Hex Trust weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#256)
 CIP-0087,2026-06-10,31f441e,milestone,3.0,2.0,0.0,1.0,chore: update MPC-Holding-Inc extraBeneficiaries on MainNet (#369)
 CIP-0090,2025-12-13,1fdd562,grant,0.0,10.0,0.0,0.0,CIP-0090 Add USDT0 weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#263)
