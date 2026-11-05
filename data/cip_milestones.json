@@ -1,0 +1,2405 @@
+{
+  "source": {
+    "repo": "github.com/canton-foundation/cips",
+    "commit": "92df641",
+    "commit_date": "2026-10-28",
+    "extracted": "2026-11-05"
+  },
+  "conventions": [
+    "absolute_due_date is computed only when the deadline anchor is the CIP approval date (stated or implied by a bare \"+N days/months\") or an absolute date; otherwise null.",
+    "Day offsets use calendar-day addition; month/year offsets use calendar-month addition (same day-of-month, clamped to month end). 2.25 years = 27 months.",
+    "anchor_type \"approval (implied)\" means the CIP wrote a bare offset (e.g. \"+180 Days\") without naming an anchor; approval was assumed.",
+    "consequence_clause quotes the CIP text (bullets joined with \"; \").",
+    "STD clause = the boilerplate missed-deadline clause shared by most CIPs."
+  ],
+  "rules": {
+    "CIP-0111": {
+      "title": "Process for Reducing Super Validator Weight",
+      "status": "Approved",
+      "created": "2026-03-18",
+      "approved": "2026-04-23",
+      "definition_ghost_sv": "A “Ghost SV” refers to an SV in the process of completing milestones associated with an allocation of weight.  While operating as a Ghost SV, unminted rewards associated with its total potential weight accrue in escrow.",
+      "scope_quote": "A Ghost SV fails to achieve a milestone associated with the CIP granting it SV weight and therefore the network should no longer accrue and escrow SV rewards (i.e., weight removal) associated with the milestone / weight in question",
+      "applies_to_all_reductions": "To avoid any doubt, any scenario in which an SV has its weight reduced (partially or entirely to 0), the process proposed in this CIP should be followed.",
+      "escrowed_weight_rule": {
+        "who_reviews_and_recommends": "The SVs delegate creating and administering a process to evaluate and recommend SVs for weight reductions to the Tokenomics Committee (“TWG”).  The TWG may delegate this analysis and recommendation process to its sub-groups such as the Accountability Committee (“AComm”).",
+        "mandatory_review_trigger": "At a minimum, the TWG must review SVs for potential weight reduction whenever the deadline for a milestone associated with a milestone-based SV CIP passes.",
+        "recommendation": "When deemed appropriate, TWG or its delegates establish and communicate a formal recommendation with requisite details to the broader TWG participants and SVs to reduce the weight of the relevant SV.",
+        "off_chain_ratification": "SVs must review this recommended weight change and vote via its standard off-chain voting process to ratify as a formal recommendation to SVs.  The scope of this vote and its results must be posted on the Canton Foundation’s (“CF”) tokenomics-announce discussion forum (or any other reasonable and public location).",
+        "on_chain_vote": "In the event the vote completes in favor of reducing an SV’s weight, within three days the CF or another SV will propose an on-chain vote.  Voting SVs must each evaluate the formal recommendation and, if accepted by that voting SV, vote to update the associated SV’s weight, to be effective at threshold.",
+        "partial_reduction_amount": "Reduces the weight of the Reduced SV Party ID by the weight amount attributed to the missed milestones as per AComm’s recommendation.",
+        "hosted_sv_note": "A vote cannot currently force adjustment of a Host SV beneficiary list.  The Host SV should simultaneously remove the Reduced SV from its beneficiaries list.",
+        "environments": "The vote should be effective at threshold and carried across Devnet, Testnet, and Mainnet environments."
+      },
+      "escrowed_rewards_rule": {
+        "quote": "Unminted CC allocated to ghost SVs that do not achieve SV milestones (and therefore do not mint these CC) should not be included in the unminted supply for future usage by Governance.  These unminted CC are represented onchain as unminted SV reward coupons.  These coupons should be burned to indicate the tokens associated with them are no longer in the unminted pool.  Enabling this functionality will require a change to the Canton Coin SV Reward DAML model.",
+        "preserve_good_standing": "The process introduced in this CIP also addresses how to calculate and \"burn” any unminted rewards associated with Ghost SV weight that have been reduced while preserving unminted rewards in escrow for Ghost SVs in good standing.",
+        "unminted_supply_calc": "Steps 1-6: total_ghost_weight; total_ghost_coupons = numCouponsIssued * total_ghost_weight; total_unminted_coupons = total_ghost_coupons + total_burned_ghost_coupons; total_ghost_cc = issuancePerSvRewardCoupon * total_unminted_coupons; max_mints = amuletToIssuePerYear / ( 365 * 144 ); max_mints – total_ghost_cc = unminted CC excluding CC originally escrowed for both unreduced and reduced ghost SVs."
+      },
+      "who_decides_summary": "TWG (or delegate e.g. AComm) reviews (mandatory when a milestone deadline passes) and recommends; SVs ratify via off-chain vote; CF or another SV proposes on-chain vote within three days; each voting SV decides, effective at on-chain threshold.",
+      "notes": [
+        "CIP-0111 gives no automatic removal at the deadline: reduction requires review, recommendation, off-chain ratification and an on-chain vote.",
+        "Burning of escrowed coupons is stated as 'should be burned' and requires a DAML model change; no timing for the burn is specified."
+      ]
+    },
+    "per_CIP_boilerplate_escrow_rules": {
+      "escrow_setup": "An `extraBeneficiary` PartyID associated with the ‘escrowed’ Super Validator will be setup by the GSF with an SV Weight at the maximum earnable weight in the CIP that granted rights to that Super Validator. ... The escrow SV will NOT mint rewards on a block by block basis ... All escrow SV rewards will go to the Unclaimed Rewards pool",
+      "release_on_success": "If the Tokenomics Working Group agrees the milestone has been met and agrees with the calculation, an announcement will be sent via the Tokenomics-Announce mailing List ... ⅔ of Super Validator Operators will then assign a portion of the Unclaimed Rewards to be minted by the Applicant’s Validator, based on the calculation approved by the Tokenomics working group.",
+      "on_missed_deadline": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards"
+    },
+    "CIP-0105": {
+      "title": "Super Validator (SV) Locking & Long-Term Commitment Framework",
+      "status": "Active",
+      "created": "2026-02-06",
+      "approved": "2026-03-02",
+      "relevance": "Not about milestone deadlines; CIP-0111 lists CIP-0105 under-locking as another case that must follow the CIP-0111 reduction process. CIP-0105 says nothing about escrowed (ghost) weight or escrowed rewards.",
+      "under_lock_enforcement_quote": "If an SV becomes under-locked relative to its current tier: The under-locked portion of its SV Weight is removed from the active SV pool within 7 days. The SV has 30 days from the initial under-lock event to restore its lock and return to the higher tier. If the SV fails to re-lock within 30 days: The removed SV Weight is permanently removed from the SV pool. The SV may not reclaim that weight in the future",
+      "aggregation_quote": "For any organization that has or does operate more than one Super Validator, the lock up calculation is based on the aggregate lifetime earnings of any/all operating SVs. Any reduction in weighting will apply to total SV Weight for that organization.",
+      "exemptions": "None. This framework applies uniformly to all Super Validators.",
+      "phases": "Phase 1 — Transitional Enforcement: Begins within 30 days of CIP approval; SV Weight evaluated weekly. Phase 2 — On-Chain Enforcement: Activates upon deployment of CC locking contracts to MainNet.",
+      "termination": "The Lock-up requirement will automatically terminate 30 days after the date of next step down in rewards/halving currently forecast to occur late summer 2029."
+    }
+  },
+  "cips": [
+    {
+      "cip": "CIP-0052",
+      "title": "Add Monstera as an SV of Weight 5",
+      "organisation": "Monstera FZE (Witan Group subsidiary)",
+      "status": "Withdrawn",
+      "created": "2025-03-14",
+      "approved": "2025-05-13",
+      "approved_note": "Changelog: 2025-05-13 Approved; 2026-05-06 Withdrawn.",
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "Boilerplate: `extraBeneficiary` set up \"with an SV Weight at the maximum earnable weight in the CIP\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Add strategic participants to the Canton Network",
+          "acceptance_criterion": "Monstera integrates approved new network adopters with assets issued on the Global Synchronizer (eg USDC, USYC) and the approved party executes its first MainNet transaction",
+          "deadline_text": "+180 Days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (anchor not stated; assumed approval)",
+          "weight_earned": "0.5 per approved participant, up to a maximum of SV Weight of 5",
+          "absolute_due_date": "2025-11-09"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Single deliverable table row; deadline \"+180 Days\" has no explicit anchor, computed from approval date.",
+        "Monthly (every 30 days) progress report to GSF Tokenomics committee.",
+        "CIP was withdrawn 2026-05-06."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 1,
+        "earliest_absolute_due_date": "2025-11-09",
+        "latest_absolute_due_date": "2025-11-09"
+      }
+    },
+    {
+      "cip": "CIP-0053",
+      "title": "AngelHack as a Weight 2.5 SV",
+      "organisation": "AngelHack",
+      "status": "Final",
+      "created": "2025-03-24",
+      "approved": "2025-05-19",
+      "approved_note": null,
+      "max_total_weight": 2.5,
+      "initial_escrowed_weight": 2.5,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Join GSF as General Member",
+          "acceptance_criterion": "Complete GSF onboarding; logo on GSF website; public announcement",
+          "deadline_text": "+ 60 Days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 0,
+          "absolute_due_date": "2025-07-18"
+        },
+        {
+          "id": "D2",
+          "name": "Staff Engineers on Splice Repo",
+          "acceptance_criterion": "Dedicated engineering team contributing to Splice repos; first commit to repo completed by Deadline",
+          "deadline_text": "+ 30 Days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 1,
+          "absolute_due_date": "2025-06-18"
+        },
+        {
+          "id": "D3",
+          "name": "Application Incubator",
+          "acceptance_criterion": "At least one reference application with robust documentation; at least one deployed into production",
+          "deadline_text": "+ 180 Days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2025-11-15"
+        },
+        {
+          "id": "D4",
+          "name": "Developer Community Growth",
+          "acceptance_criterion": "At least one each of: Hackathon, Technical Workshop, Mentorship Program",
+          "deadline_text": "+ 180 Days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2025-11-15"
+        },
+        {
+          "id": "D5",
+          "name": "Strategic Partnerships",
+          "acceptance_criterion": "Onboard at least two partners pre-approved by Tokenomics Working Group",
+          "deadline_text": "+ 180 Days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2025-11-15"
+        },
+        {
+          "id": "D6",
+          "name": "Active Governance Participation",
+          "acceptance_criterion": "Engage in Canton Network governance / CIP process",
+          "deadline_text": "N/A",
+          "anchor_type": "none",
+          "anchor": null,
+          "weight_earned": 0,
+          "absolute_due_date": null
+        },
+        {
+          "id": "D7",
+          "name": "Sustainable Network Economics",
+          "acceptance_criterion": "Operate as Validator and application developer",
+          "deadline_text": "N/A",
+          "anchor_type": "none",
+          "anchor": null,
+          "weight_earned": 0,
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Deadlines written \"+ N Days\" with no explicit anchor; computed from approval date."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 7,
+        "earliest_absolute_due_date": "2025-06-18",
+        "latest_absolute_due_date": "2025-11-15"
+      }
+    },
+    {
+      "cip": "CIP-0058",
+      "title": "Add IntellectEU as Weight 1 SV",
+      "organisation": "IntellectEU",
+      "status": "Final",
+      "created": "2025-04-14",
+      "approved": "2025-04-25",
+      "approved_note": null,
+      "max_total_weight": 1,
+      "initial_escrowed_weight": 1,
+      "initial_escrowed_weight_basis": "Mechanics section: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Enable escrow mechanisms to ensure Super Validators deliver value in return for rewards",
+          "acceptance_criterion": "Implement infrastructure in GSF multi-tenant SV to operationalize milestone-based CIP reward mechanics",
+          "deadline_text": "+60 days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2025-06-24"
+        },
+        {
+          "id": "D2",
+          "name": "Commit at least one resource to maintain and resolve issues within the Splice repo",
+          "acceptance_criterion": "Document resolved issues/contributions, at least one contribution per month",
+          "deadline_text": "+90 days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2025-07-24"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Abstract adds an ongoing commitment: \"meaningfully contribute to the Splice repos at least once per month for at least 1 year\".",
+        "Deadlines have no explicit anchor; computed from approval date."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 2,
+        "earliest_absolute_due_date": "2025-06-24",
+        "latest_absolute_due_date": "2025-07-24"
+      }
+    },
+    {
+      "cip": "CIP-0059",
+      "title": "Add Woodside AI as an SV of Weight 10",
+      "organisation": "Woodside AI",
+      "status": "Withdrawn",
+      "created": "2025-04-21",
+      "approved": "2025-05-09 (reset 2025-08-13)",
+      "approved_note": "Header: \"Approved: 2025-05-09 (reset 2025-08-13)\". Changelog: \"Approval date, for the purpose of calculating milestone deadlines, was reset by vote of the Tokenomics working group of the GSF to be August 13, 2025\". Due dates computed from 2025-08-13. Withdrawn 2026-05-06.",
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Commitment from major GP for Private Credit",
+          "acceptance_criterion": "LOI or equivalent signed with Blackstone (or approved alternative) + PR announcing intention to build private credit infra on Canton",
+          "deadline_text": "+120 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (reset date 2025-08-13)",
+          "weight_earned": 1,
+          "absolute_due_date": "2025-12-11"
+        },
+        {
+          "id": "M2",
+          "name": "Private Credit MVP live",
+          "acceptance_criterion": "At least one private credit module deployed and utilized on the Global Synchronizer (pre-approved plan)",
+          "deadline_text": "+180 Days from Private Credit Commitment",
+          "anchor_type": "milestone",
+          "anchor": "M1 (Private Credit Commitment)",
+          "weight_earned": 1,
+          "absolute_due_date": null
+        },
+        {
+          "id": "M3",
+          "name": "Private Credit Incentives",
+          "acceptance_criterion": "$2 billion of private credit TVL on the Global Synchronizer; assets disclosed to on-chain data services",
+          "deadline_text": "+180 Days from Private Credit MVP Live",
+          "anchor_type": "milestone",
+          "anchor": "M2 (Private Credit MVP live)",
+          "weight_earned": "+0.5 per $500m of Private Credit TVL, Up to Max 2",
+          "absolute_due_date": null
+        },
+        {
+          "id": "M4",
+          "name": "Commitment from major GP for Fund Admin",
+          "acceptance_criterion": "LOI or equivalent signed with Blackstone (or approved alternative) + PR for Fund Admin infra on Canton",
+          "deadline_text": "+120 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (reset date 2025-08-13)",
+          "weight_earned": 1,
+          "absolute_due_date": "2025-12-11"
+        },
+        {
+          "id": "M5",
+          "name": "Fund Admin MVP live",
+          "acceptance_criterion": "Blackstone (or alternative) adopts Fund Admin platform; PR on go-live; integrated with on-chain data oracle and stablecoin",
+          "deadline_text": "+1 Year from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (reset date 2025-08-13)",
+          "weight_earned": 3,
+          "absolute_due_date": "2026-08-13"
+        },
+        {
+          "id": "M6",
+          "name": "Canton Adoption Incentives",
+          "acceptance_criterion": "Onboard Tokenomics Working Group-approved participants to use the Global Synchronizer and/or apps",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (reset date 2025-08-13)",
+          "weight_earned": "0.5 per Participant, Up to Max 2",
+          "absolute_due_date": "2026-02-09"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Using the original 2025-05-09 approval instead would give: M1/M4 2025-09-06, M5 2026-05-09, M6 2025-11-05.",
+        "CIP withdrawn 2026-05-06."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 6,
+        "earliest_absolute_due_date": "2025-12-11",
+        "latest_absolute_due_date": "2026-08-13"
+      }
+    },
+    {
+      "cip": "CIP-0060",
+      "title": "Add Zero Hash as SV of Weight 7.5",
+      "organisation": "Zero Hash",
+      "status": "Final",
+      "created": "2025-04-23",
+      "approved": "2025-05-13",
+      "approved_note": null,
+      "max_total_weight": 7.5,
+      "initial_escrowed_weight": 7.5,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Zero Hash Product Integration to Canton",
+          "acceptance_criterion": "Integrate Canton Coin and USDC issued on Canton into Zero Hash product suite",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 2.5,
+          "absolute_due_date": "2025-11-09"
+        },
+        {
+          "id": "D2",
+          "name": "Education, Social, and Events",
+          "acceptance_criterion": "At least one of each: Webinar, White paper, Social media amplification, Joint event",
+          "deadline_text": "+90 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2025-08-11"
+        },
+        {
+          "id": "D3",
+          "name": "Canton is the Exclusive Privacy-enabled Settlement Blockchain for ZH",
+          "acceptance_criterion": "ZH exclusively leverages Canton for privacy-enabled on-chain settlement whenever technically possible",
+          "deadline_text": "+180 day days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2025-11-09"
+        },
+        {
+          "id": "D4a",
+          "name": "Adoption Incentives (months 1-6)",
+          "acceptance_criterion": "0.25 weight for each unique customer that settles > $125M of volume on Canton",
+          "deadline_text": "months 1-6 post integration with Canton",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Product Integration)",
+          "weight_earned": "up to 1.5",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D4b",
+          "name": "Adoption Incentives (months 7-12)",
+          "acceptance_criterion": "0.5 weight for every $500M of volume settled on Canton",
+          "deadline_text": "months 7-12 post integration with Canton",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Product Integration)",
+          "weight_earned": "up to 1.0",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D4c",
+          "name": "Adoption Incentives (months 13-24)",
+          "acceptance_criterion": "(criterion not stated in text)",
+          "deadline_text": "months 13-24 post integration with Canton",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Product Integration)",
+          "weight_earned": 1.5,
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Deliverables table is malformed: the \"Exclusive Privacy-enabled Settlement\" row contains stray extra cells from an apparent earlier version (Category 1 volume-based / Category 2 strategic adopter incentives, deadline \"+365 Days from Product Integration\", \"1 per $150m of volume ... Max up to 7 across both categories\"). These are excluded because 2.5+0.5+0.5+1.5+1.0+1.5 = 7.5 matches the title; the stray 7-weight row would exceed it.",
+        "Months 13-24 adoption tranche has no stated acceptance criterion.",
+        "Progress report to GSF Tokenomics committee every 60 days."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 6,
+        "earliest_absolute_due_date": "2025-08-11",
+        "latest_absolute_due_date": "2025-11-09"
+      }
+    },
+    {
+      "cip": "CIP-0061",
+      "title": "Add Chainlink as a Super Validator of Weight 7.5",
+      "organisation": "Chainlink (Chainlink Labs)",
+      "status": "Final",
+      "created": "2025-05-09",
+      "approved": "2025-07-21",
+      "approved_note": null,
+      "max_total_weight": 7.5,
+      "initial_escrowed_weight": 7.5,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Chainlink Oracle Infrastructure (Data Streams) integration to Canton",
+          "acceptance_criterion": "Data Streams natively integrated with the Global Synchronizer; live in production with at least 1 customer",
+          "deadline_text": "180 days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1.5,
+          "absolute_due_date": "2026-01-17"
+        },
+        {
+          "id": "D2",
+          "name": "Smart Data (Proof of Reserve, SmartNAV, SmartAUM) Integration to Canton",
+          "acceptance_criterion": "SmartData services incl. PoR; live in production with at least 1 customer",
+          "deadline_text": "180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1.5,
+          "absolute_due_date": "2026-01-17"
+        },
+        {
+          "id": "D3",
+          "name": "\"Read\" data applications: Canton Network Data Access",
+          "acceptance_criterion": "Acquire rights to view relevant private Canton data, standardize, publish via Data Streams/Smart Data, document; live in production with at least 1 customer",
+          "deadline_text": "180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 2.0,
+          "absolute_due_date": "2026-01-17"
+        },
+        {
+          "id": "D4",
+          "name": "Cross Chain Interoperability Protocol (CCIP) integration to Canton and bridge adoption incentives",
+          "acceptance_criterion": "See CIP 0065 - Bridge SV CIP",
+          "deadline_text": "See CIP 0065 - Bridge SV CIP",
+          "anchor_type": "external",
+          "anchor": "CIP-0065",
+          "weight_earned": "See CIP 0065 - Bridge SV CIP",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D5",
+          "name": "Adoption Incentives",
+          "acceptance_criterion": "Category 1 value-based (live use cases requiring Chainlink services) / Category 2 strategic adopters (new users/offerings)",
+          "deadline_text": "+180 Days from Product Integration",
+          "anchor_type": "milestone",
+          "anchor": "\"Product Integration\" (not specified which of D1-D3)",
+          "weight_earned": "0.5 per live deployment under Category 1 or Category 2, Max up to 2.5 in total",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "1.5+1.5+2.0+2.5 = 7.5; CCIP weight is under CIP-0065, not counted here.",
+        "\"Product Integration\" anchor for adoption incentives is undefined.",
+        "The word \"confidential\" appears only in descriptive appendix text about Chainlink products, not about milestones.",
+        "Progress report to GSF Tokenomics committee every 60 days."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 5,
+        "earliest_absolute_due_date": "2026-01-17",
+        "latest_absolute_due_date": "2026-01-17"
+      }
+    },
+    {
+      "cip": "CIP-0063",
+      "title": "Add Kaiko as a Super Validator of Weight 6.5",
+      "organisation": "Kaiko",
+      "status": "Final",
+      "created": "2025-05-27",
+      "approved": "2025-05-28",
+      "approved_note": null,
+      "max_total_weight": 6.5,
+      "initial_escrowed_weight": 6.5,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "1a",
+          "name": "\"Read\" data applications: Canton Network Data Distribution",
+          "acceptance_criterion": "Consume/process/distribute Canton activity data via Kaiko API; at least one paying subscriber; documentation",
+          "deadline_text": "90 days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 2.0,
+          "absolute_due_date": "2025-08-26"
+        },
+        {
+          "id": "1b",
+          "name": "\"Write\" data application: Off-Chain Data Publishing on Canton",
+          "acceptance_criterion": "Secure verifiable method to write off-chain data to Canton Mainnet; at least one Canton participant consuming it; documentation",
+          "deadline_text": "180 days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1.0,
+          "absolute_due_date": "2025-11-24"
+        },
+        {
+          "id": "2",
+          "name": "Onboarding of Canton in Kaiko Research",
+          "acceptance_criterion": "Tokenization platform benchmark incl. Canton; 1 webinar + 2 research publications",
+          "deadline_text": "180 days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "0.5 for benchmark release; 0.5 for 1 webinar + 2 research publications",
+          "absolute_due_date": "2025-11-24"
+        },
+        {
+          "id": "3a",
+          "name": "Enabling strategic adopters to the Canton Network via data products",
+          "acceptance_criterion": "Generic data modules for third-party providers and whitelisted consumers; licensing; enable strategic financial apps",
+          "deadline_text": "Within 12 months of generic data modules being live",
+          "anchor_type": "milestone",
+          "anchor": "generic data modules being live",
+          "weight_earned": "0.5 per third party using Kaiko applications (capped at 2.5)",
+          "absolute_due_date": null
+        },
+        {
+          "id": "3b",
+          "name": "Kaiko being clients of companies building on Canton",
+          "acceptance_criterion": "Already signed with one provider; committed to being first client of another",
+          "deadline_text": "—",
+          "anchor_type": "none",
+          "anchor": null,
+          "weight_earned": "—",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Abstract: \"as milestones and deliverables are reached over an 18-month period of time\".",
+        "Appendix III phases (Days 0-90, 91-180, 181-2Y, ongoing through 2Y) are a scope of work, not separate weighted milestones."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 5,
+        "earliest_absolute_due_date": "2025-08-26",
+        "latest_absolute_due_date": "2025-11-24"
+      }
+    },
+    {
+      "cip": "CIP-0065",
+      "title": "Add Layer Zero, Wormhole, and Chainlink as SVs at Weight 3 each",
+      "organisation": "LayerZero Labs, Wormhole Labs, Chainlink (three applicants)",
+      "status": "Final",
+      "created": "2025-06-02",
+      "approved": "2025-07-14",
+      "approved_note": "Changelog lists \"2025-06-13: Approved CIP\", then \"2025-07-10: Updated Deliverables\", then \"2025-07-14: Approved CIP\". Header says 2025-07-14; due dates computed from 2025-07-14.",
+      "max_total_weight": "3 per applicant (9 total) plus a bonus pool of Weight 5 (3.5 first-to-production + 1.5 second-to-production) = 14 total",
+      "initial_escrowed_weight": "3 per applicant (9 total)",
+      "initial_escrowed_weight_basis": "\"setup by the GSF with an SV Weight at the maximum earnable weight. This will not include the potential \\\"First to Production\\\" or \\\"Second to Production\\\" bonus weights.\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "LayerZero to deploy and integrate a full Endpoint on the Canton Network",
+          "acceptance_criterion": "OFT bridging to/from Canton; supports Canton Network Token Standard; production-grade messaging mesh to 125+ chains",
+          "deadline_text": "+ 12 Months",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 1.5,
+          "absolute_due_date": "2026-07-14"
+        },
+        {
+          "id": "D2",
+          "name": "Wormhole integration with Canton Network",
+          "acceptance_criterion": "NTT bridging to/from Canton; Token Standard support; full mesh messaging in production",
+          "deadline_text": "+ 12 Months",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 1.5,
+          "absolute_due_date": "2026-07-14"
+        },
+        {
+          "id": "D3",
+          "name": "Chainlink's Cross Chain Interoperability Protocol (CCIP) integration to Canton",
+          "acceptance_criterion": "CCIP in production connecting GS with 50+ chains; Token Standard support; CCT bridging",
+          "deadline_text": "+ 12 Months",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 1.5,
+          "absolute_due_date": "2026-07-14"
+        },
+        {
+          "id": "D4",
+          "name": "Adoption (all applicants)",
+          "acceptance_criterion": "Route increasing amount of assets/applications to Canton",
+          "deadline_text": "+ 180 Days from Product Integration",
+          "anchor_type": "milestone",
+          "anchor": "each applicant's product integration (D1/D2/D3)",
+          "weight_earned": "0.5 per 5 assets/applications using Canton via the bridge, Up to a Total of 1.5 ea",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D5",
+          "name": "First to Production Incentive",
+          "acceptance_criterion": "Pass GSF security audit; first bridge to facilitate $10m of assets by independent third party, after audit + 90-day burn-in",
+          "deadline_text": "+ 180 Days from Product Integration",
+          "anchor_type": "milestone",
+          "anchor": "product integration",
+          "weight_earned": "3.5 added to SV pool and awarded to the appropriate party at the time of achieving the incentive",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D6",
+          "name": "Second to Production Incentive",
+          "acceptance_criterion": "Same as D5 for the second bridge",
+          "deadline_text": "+ 180 Days from Product Integration",
+          "anchor_type": "milestone",
+          "anchor": "product integration",
+          "weight_earned": "1.5 added to SV pool and awarded to the appropriate party at the time of achieving the incentive",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D7",
+          "name": "First to Scale Incentive",
+          "acceptance_criterion": "First audited bridge to move $50m of a given asset gets default CNS entry for that asset (reassessed at least yearly)",
+          "deadline_text": "+ 180 Days from Product Integration",
+          "anchor_type": "milestone",
+          "anchor": "product integration",
+          "weight_earned": "Default CNS awarded (no weight)",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D8",
+          "name": "Join the Global Synchronizer Foundation (all applicants)",
+          "acceptance_criterion": "General Member of GSF; logo on website; public announcement",
+          "deadline_text": "+ 45 Days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 0,
+          "absolute_due_date": "2025-08-28"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "\"+ 12 Months\" and \"+ 45 Days\" have no stated anchor; computed from approval date (calendar months).",
+        "Bonus weights (D5, D6) are added to the SV pool when achieved, not escrowed."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 8,
+        "earliest_absolute_due_date": "2025-08-28",
+        "latest_absolute_due_date": "2026-07-14"
+      }
+    },
+    {
+      "cip": "CIP-0069",
+      "title": "Add Ledger as an SV of Weight 5",
+      "organisation": "Ledger",
+      "status": "Final",
+      "created": "2025-07-11",
+      "approved": "2025-07-21",
+      "approved_note": null,
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Ledger Live support for Canton Token Standard",
+          "acceptance_criterion": "Ledger Live customers can self-custody any Canton Token Standard asset",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2026-01-17"
+        },
+        {
+          "id": "D2",
+          "name": "Ledger Enterprise support for Canton Token Standard",
+          "acceptance_criterion": "Ledger Enterprise customers can self-custody any Canton Token Standard asset",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 0.5,
+          "absolute_due_date": "2026-01-17"
+        },
+        {
+          "id": "D3",
+          "name": "Acceleration Bonus (Ledger Live)",
+          "acceptance_criterion": "At least one Ledger Live customer completes a Mainnet transaction; <=60 days +2, >=180 days +0, linear between",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max 2",
+          "absolute_due_date": "2026-01-17"
+        },
+        {
+          "id": "D4",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "Drive Canton adoption among existing Ledger customers",
+          "deadline_text": "+180 days from going live",
+          "anchor_type": "milestone",
+          "anchor": "going live (D1/D2)",
+          "weight_earned": "+ 0.5 per $1.5b of assets transferred up to a maximum of +2",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Acceleration bonus is time-scaled: the 60-day mark from approval would be 2025-09-19."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 4,
+        "earliest_absolute_due_date": "2026-01-17",
+        "latest_absolute_due_date": "2026-01-17"
+      }
+    },
+    {
+      "cip": "CIP-0071",
+      "title": "Add Ubyx as an SV of Weight 5",
+      "organisation": "Ubyx",
+      "status": "Final",
+      "created": "2025-06-06",
+      "approved": "2025-08-11",
+      "approved_note": "Header Created 2025-06-06 but changelog says \"2025-06-17: Initial draft of the proposal\" (inconsistent).",
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "MVP Go Live",
+          "acceptance_criterion": "First customers and production transactions; at least 2 institutions, 2 stablecoins, 1 settlement bank",
+          "deadline_text": "+180 days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-02-07"
+        },
+        {
+          "id": "D2",
+          "name": "Acceleration Bonus",
+          "acceptance_criterion": "Transaction on GS MainNet; <=60 days from SV CIP approval +2, 180 days +0, linear",
+          "deadline_text": "+180 days",
+          "anchor_type": "approval",
+          "anchor": "SV CIP approval (stated in criteria)",
+          "weight_earned": "Max 2",
+          "absolute_due_date": "2026-02-07"
+        },
+        {
+          "id": "D3",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "Each Tokenomics-Committee-approved participant using Ubyx via its own Canton Validator",
+          "deadline_text": "+180 days",
+          "anchor_type": "approval (implied)",
+          "anchor": "CIP approval (implied)",
+          "weight_earned": "+ 0.5 per approved name, Max 2",
+          "absolute_due_date": "2026-02-07"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Abstract: \"as milestones and deliverables are reached over an 18-month period\" but all table deadlines are \"+180 days\".",
+        "D1 and D3 deadlines have no explicit anchor; computed from approval."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-02-07",
+        "latest_absolute_due_date": "2026-02-07"
+      }
+    },
+    {
+      "cip": "CIP-0072",
+      "title": "Add Fireblocks as an SV of Weight 5",
+      "organisation": "Fireblocks",
+      "status": "Final",
+      "created": "2025-07-30",
+      "approved": "2025-08-11",
+      "approved_note": null,
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "\"setup by the GSF with an SV Weight at the maximum earnable weight\" (text copied from CIP-0065 also mentions First/Second to Production bonuses which do not exist in this CIP)",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Fireblocks wallet support for Canton Token Standard",
+          "acceptance_criterion": "Fireblocks customers can self custody any Canton Token Standard asset",
+          "deadline_text": "+ 180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-02-07"
+        },
+        {
+          "id": "D2",
+          "name": "Acceleration Bonus",
+          "acceptance_criterion": "At least one customer live with MainNet transaction; +2 at 60 days, +0 at 180 days, linear",
+          "deadline_text": "+ 180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max 2",
+          "absolute_due_date": "2026-02-07"
+        },
+        {
+          "id": "D3",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "Drive Canton adoption with existing Fireblocks customers",
+          "deadline_text": "+ 180 Days from Wallet Support going live",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Wallet Support going live)",
+          "weight_earned": "+ 0.5 per $1.5b of assets transferred up to a maximum of +2",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-02-07",
+        "latest_absolute_due_date": "2026-02-07"
+      }
+    },
+    {
+      "cip": "CIP-0074",
+      "title": "Add BitGo as an SV of Weight 5",
+      "organisation": "BitGo",
+      "status": "Approved",
+      "created": "2025-08-15",
+      "approved": "2025-08-27",
+      "approved_note": "Post-History includes an \"update_to_cip_0074_bitgo_sv\" thread; no amendment entry in changelog.",
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "\"setup by the GSF with an SV Weight at the maximum earnable weight\" (copied CIP-0065 text re First/Second to Production bonuses is not applicable)",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "BitGo Custody Support for Canton Token Standard",
+          "acceptance_criterion": "BitGo customers can custody any Canton Token Standard asset",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-02-23"
+        },
+        {
+          "id": "D2",
+          "name": "Acceleration Bonus",
+          "acceptance_criterion": "At least one customer live with MainNet transaction; +2 at 60 days, +0 at 180 days, linear",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max 2",
+          "absolute_due_date": "2026-02-23"
+        },
+        {
+          "id": "D3",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "Drive Canton adoption with existing BitGo customers",
+          "deadline_text": "+180 Days from Custody Support going live",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Custody Support going live)",
+          "weight_earned": "+0.5 per $1.5b of assets transferred up to a maximum of +2",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-02-23",
+        "latest_absolute_due_date": "2026-02-23"
+      }
+    },
+    {
+      "cip": "CIP-0075",
+      "title": "Add Zodia as a SV with max weight 5",
+      "organisation": "Zodia Custody",
+      "status": "Approved",
+      "created": "2025-09-11",
+      "approved": "2025-09-26",
+      "approved_note": null,
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Off-Venue Settlement",
+          "acceptance_criterion": "Integrate Canton within Zodia Interchange settlement solution",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+ 0.5",
+          "absolute_due_date": "2026-03-25"
+        },
+        {
+          "id": "D2",
+          "name": "Off-Venue Settlement Acceleration Bonus",
+          "acceptance_criterion": "Customer Off-Venue Settlement MainNet tx + a Top 25 exchange/OTC venue live; +1 at 60 days, +0 at 180 days, linear",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max +1",
+          "absolute_due_date": "2026-03-25"
+        },
+        {
+          "id": "D3",
+          "name": "Off-Venue Settlement Adoption Bonus",
+          "acceptance_criterion": "Drive adoption with Off-Venue Settlement customers",
+          "deadline_text": "+180 days from Off-Venue Settlement Go Live",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Off-Venue Settlement Go Live)",
+          "weight_earned": "Max +1; +0.5 per $1.5b of assets settled",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D4",
+          "name": "Tri-Party Collateral Management",
+          "acceptance_criterion": "Build Tri-Party Collateral management solution on Canton",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+0.5 (if delivered in 180 days)",
+          "absolute_due_date": "2026-03-25"
+        },
+        {
+          "id": "D5",
+          "name": "Tri-Party Acceleration Bonus",
+          "acceptance_criterion": "At least two Tri-Party customers live with MainNet tx; +1 at 60 days, +0 at 180 days, linear",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max +1",
+          "absolute_due_date": "2026-03-25"
+        },
+        {
+          "id": "D6",
+          "name": "Tri-Party Adoption Bonus",
+          "acceptance_criterion": "Drive adoption with Tri-Party customers",
+          "deadline_text": "+180 days from Tri-Party Go Live",
+          "anchor_type": "milestone",
+          "anchor": "D4 (Tri-Party Go Live)",
+          "weight_earned": "Max +1; +0.5 per $1.5b of assets settled",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Abstract: \"provisional Weight 5 as milestones and deliverables are reached over a 6 month period of time\"; adoption bonuses anchored to go-live may extend beyond 6 months.",
+        "Abstract: \"Associated rewards will remain unminted until defined milestones are met and verified through the Tokenomics Group review process.\""
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 6,
+        "earliest_absolute_due_date": "2026-03-25",
+        "latest_absolute_due_date": "2026-03-25"
+      }
+    },
+    {
+      "cip": "CIP-0076",
+      "title": "Hypernative as a Super Validator with a Weight of 1",
+      "organisation": "Hypernative",
+      "status": "Final",
+      "created": "2025-08-20",
+      "approved": "2025-09-09",
+      "approved_note": "Header Created 2025-08-20 but changelog says \"2025-09-05: Initial draft of the proposal\" (inconsistent).",
+      "max_total_weight": 1,
+      "initial_escrowed_weight": 1,
+      "initial_escrowed_weight_basis": "\"setup by the GSF with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Hypernative provides proactive network monitoring solution",
+          "acceptance_criterion": "Any Canton member can use Hypernative monitoring for CC balance changes/transfers with alerts; at least one Canton entity subscribed to alerts (Appendix III, Milestone 5)",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-03-08"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Appendix III lists an unweighted internal plan (Milestone 1-5: \"Up to 2 months\", \"Up to 2 months\", \"2 months after Stage 1\", \"1 month after Stage 3\", \"After all prior stages\"); only the single table row carries weight."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 1,
+        "earliest_absolute_due_date": "2026-03-08",
+        "latest_absolute_due_date": "2026-03-08"
+      }
+    },
+    {
+      "cip": "CIP-0077",
+      "title": "Add Taurus as an SV of Weight 5",
+      "organisation": "Taurus",
+      "status": "Approved",
+      "created": "2025-08-26",
+      "approved": "2025-09-12",
+      "approved_note": null,
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "CUSTODY: Integration w/ Taurus-EXPLORER + Integration w/ Taurus-PROTECT",
+          "acceptance_criterion": "Custody (including nodes & indexing) support of Canton Network Token Standard",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-03-11"
+        },
+        {
+          "id": "D2",
+          "name": "Acceleration Bonus",
+          "acceptance_criterion": "For Custody: +2 at 60 days, +0 at 180 days, linear; at least one customer live with MainNet tx",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 2,
+          "absolute_due_date": "2026-03-11"
+        },
+        {
+          "id": "D3",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "Cat 1 per $1.5b of assets transferred; Cat 2 each approved participant issuing >$1M TVL asset via Taurus",
+          "deadline_text": "+180 days from custody support going live",
+          "anchor_type": "milestone",
+          "anchor": "D1 (custody support going live)",
+          "weight_earned": "0.5 per live deployment under Category 1 or Category 2; Max up to 2 in total",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Acceleration Bonus weight written as \"2\" (a maximum under a sliding scale)."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-03-11",
+        "latest_absolute_due_date": "2026-03-11"
+      }
+    },
+    {
+      "cip": "CIP-0080",
+      "title": "Add Republic as an SV of Weight 6",
+      "organisation": "Republic",
+      "status": "Final",
+      "created": "2025-09-18",
+      "approved": "2025-10-06",
+      "approved_note": null,
+      "max_total_weight": 6,
+      "initial_escrowed_weight": 6,
+      "initial_escrowed_weight_basis": "Boilerplate: extraBeneficiary at maximum earnable weight",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Republic Wallet support for Canton Token Standard",
+          "acceptance_criterion": "Integrate Canton Network Token Standard into Republic regulated retail wallet",
+          "deadline_text": "+180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-04-04"
+        },
+        {
+          "id": "D2",
+          "name": "Acceleration Bonus",
+          "acceptance_criterion": "Wallet support live before Canton Coin listing date (end-October 2025): <= listing +2; >= 7 days after +1; >= 90 days after +0",
+          "deadline_text": "+90 days from Canton Coin listing date",
+          "anchor_type": "external",
+          "anchor": "Canton Coin listing date (\"end-October 2025\", not fixed in text)",
+          "weight_earned": "Max 2",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D3",
+          "name": "Republic Launchpad support for Canton Token Standard",
+          "acceptance_criterion": "RWA-specific Launchpad integration (KYC UX, transfer restrictions, lockups; Canton privacy features; community-financed project launch)",
+          "deadline_text": "+180 Days from Wallet support going live",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Wallet support going live)",
+          "weight_earned": 1,
+          "absolute_due_date": null
+        },
+        {
+          "id": "D4",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "Drive adoption with existing Republic partners (Sygnum, Hamilton Lane, DBS, INX, Hex Trust, Centrifuge, Open Eden, partner under NDA)",
+          "deadline_text": "+180 Days from Wallet support going live",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Wallet support going live)",
+          "weight_earned": "+0.5 per $1.5b of assets transferred or approved name (by the Tokenomics Committee), Up to a maximum of +2",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Acceleration bonus anchored to external CC listing date; no exact date in the CIP, so no absolute due date computed.",
+        "One adoption partner is \"Partner under NDA\" (only that name is undisclosed)."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 4,
+        "earliest_absolute_due_date": "2026-04-04",
+        "latest_absolute_due_date": "2026-04-04"
+      }
+    },
+    {
+      "cip": "CIP-0081",
+      "title": "Add YZi Labs as Weight 10 SV",
+      "organisation": "YZi Labs",
+      "status": "Approved",
+      "created": "2025-09-23",
+      "approved": "2025-09-26",
+      "approved_note": null,
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"A 'representative' SV will be setup by the GSF, or other Super Validator node operator approved to offer escrow services, with an SV Weight at the maximum earnable weight in this CIP\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "PROGRAM",
+          "name": "Umbrella program: per-initiative pre-approved milestones",
+          "acceptance_criterion": "Each initiative pre-approved by Tokenomics Committee with target outcomes, evidence, timeline, assigned weight, verification process and confidentiality flag",
+          "deadline_text": "Term: +365 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "up to 10 total (per-initiative tranches assigned at pre-approval)",
+          "absolute_due_date": "2026-09-26"
+        }
+      ],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"Confidentiality: The Committee may approve confidential initiatives with YZi.\" / \"Where counterparties or market sensitivities require it, the Committee and YZi may maintain confidential terms.\"",
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight on the representative SV will be removed from the SV Operator configs; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "No public milestone list; milestones and due dates are defined per initiative at pre-approval. Only the program term (+365 days) is public.",
+        "Confidentiality is optional per initiative (Confidentiality Flag Y/N), not blanket.",
+        "\"Credit: Verified Weight is transferred from escrow; any unverified portion remains pending.\""
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 1,
+        "earliest_absolute_due_date": "2026-09-26",
+        "latest_absolute_due_date": "2026-09-26"
+      }
+    },
+    {
+      "cip": "CIP-0083",
+      "title": "DTCC Super Validator Participation",
+      "organisation": "DTCC",
+      "status": "Approved",
+      "created": "2025-10-01",
+      "approved": "TBD",
+      "approved_note": "Header says \"Approved: TBD\"; changelog says \"2025-10-06: Approved CIP\" (inconsistent). Status: Approved.",
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"The specific deliverables and milestones for DTCC have been agreed privately with the Canton Foundation. These will be reviewed by the Tokenomics Committee on a confidential basis.\" / \"DTCC's specific commitments will not be made public until the Foundation and DTCC determine it is appropriate.\"",
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "No milestones, deadlines or per-milestone weights are public; no term stated.",
+        "\"Upon confirmation, rewards associated with milestones will be released from escrow.\""
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 0,
+        "earliest_absolute_due_date": null,
+        "latest_absolute_due_date": null
+      }
+    },
+    {
+      "cip": "CIP-0085",
+      "title": "Add Talos as Weight 6.5 SV",
+      "organisation": "Talos (Coin Metrics existing SV preserved)",
+      "status": "Final",
+      "created": "2025-09-08",
+      "approved": "2025-10-09",
+      "approved_note": null,
+      "max_total_weight": "+6.5 escrowed for Talos (in addition to Coin Metrics' existing Weight 1.0 under CIP-0046)",
+      "initial_escrowed_weight": 6.5,
+      "initial_escrowed_weight_basis": "\"adds an escrowed, outcome-linked maximum earnable Weight of +6.5 for Talos\"",
+      "weight_granted_immediately": "0 new (Coin Metrics' existing Weight 1.0 preserved under CIP-0046)",
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "CC Support and Readiness across Talos",
+          "acceptance_criterion": "CC market data, Security Master, exchange/OTC adapters and custody modules CC-capable; UAT demos; CC in client sandboxes",
+          "deadline_text": "+90 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+1",
+          "absolute_due_date": "2026-01-07"
+        },
+        {
+          "id": "D2",
+          "name": "CC Support Acceleration Bonus",
+          "acceptance_criterion": "+1 at 45 days, +0 at 90 days, linear",
+          "deadline_text": "+90 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max +1",
+          "absolute_due_date": "2026-01-07"
+        },
+        {
+          "id": "D3",
+          "name": "CC Support Exchange Activation",
+          "acceptance_criterion": "Enable CC at any Talos-connected venue/custodian within <=5 business days of their enablement; press release; one production flow",
+          "deadline_text": "≤5 Business Days from Talos-enabled Venue adding CC",
+          "anchor_type": "external",
+          "anchor": "a Talos-enabled venue adding CC",
+          "weight_earned": "+0.5",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D4",
+          "name": "CC Support Adoption Bonus",
+          "acceptance_criterion": "+0.5 per $25M CC traded through Talos, evidenced to TWG",
+          "deadline_text": "+180 Days from first Venue Going Live",
+          "anchor_type": "milestone/external",
+          "anchor": "first Venue Going Live",
+          "weight_earned": "+0.5 per $25M of CC traded through Talos, Max +1",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D5",
+          "name": "pX Settlement Support and Readiness",
+          "acceptance_criterion": ">=1 external counterparty completes >=20 production settlements over Canton; publish ops stats",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+1",
+          "absolute_due_date": "2026-04-07"
+        },
+        {
+          "id": "D6",
+          "name": "pX Settlement Acceleration Bonus",
+          "acceptance_criterion": "+1.0 at 60 days, +0 at 180 days, linear",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max +1.0",
+          "absolute_due_date": "2026-04-07"
+        },
+        {
+          "id": "D7",
+          "name": "pX Settlement Adoption Bonus",
+          "acceptance_criterion": "+0.5 per $1.5B notional settled on Canton via Talos, evidenced to TWG",
+          "deadline_text": "+180 Days from pX Go Live",
+          "anchor_type": "milestone",
+          "anchor": "D5 (pX Go Live)",
+          "weight_earned": "+0.5 per $1.5B of notional settled on Canton via Talos, Max +1",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Verification by \"Accountability Subcommittee\" (abstract) and TWG (evidence submission).",
+        "1+1+0.5+1+1+1+1 = 6.5."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 7,
+        "earliest_absolute_due_date": "2026-01-07",
+        "latest_absolute_due_date": "2026-04-07"
+      }
+    },
+    {
+      "cip": "CIP-0086",
+      "title": "ERC-20 Middleware and Distributed Indexer for Canton Network",
+      "organisation": "ChainSafe",
+      "status": "Approved",
+      "created": "2025-10-14",
+      "approved": "2025-10-20",
+      "approved_note": "Header Approved 2025-10-20; changelog says \"2025-1015: CIP Approved\" (malformed date, apparently 2025-10-15; inconsistent with header). Due dates computed from header date 2025-10-20 (from 2025-10-15 they would be 5 days earlier: 2026-04-13).",
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "ERC-20 Middleware MVP Complete and Available on MainNet",
+          "acceptance_criterion": "First EVM compatible token launched on Canton MainNet using ChainSafe's ERC-20 middleware",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-04-18"
+        },
+        {
+          "id": "D2",
+          "name": "Acceleration Bonus",
+          "acceptance_criterion": "+2 at 60 days, +0 at 180 days, linear; at least one asset live with MainNet tx",
+          "deadline_text": "+180 Days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max +2",
+          "absolute_due_date": "2026-04-18"
+        },
+        {
+          "id": "D3",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "+0.5 per asset with > $10m TVL issued on MainNet",
+          "deadline_text": "+180 Days from Middleware going to MainNet",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Middleware going to MainNet)",
+          "weight_earned": "+ 0.5 per asset with > $10m of TVL issued on MainNet, Max +2",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "CIP is primarily a Statement of Work (Phase 1 deliverables 1-6 with estimated durations, paid via monthly invoices); only the \"Deliverables for Full SV Rewards\" table carries SV weight (\"Add ChainSafe as an SV of weight 5\").",
+        "Phase 1 SoW deliverables have estimated durations (2, 2, 4, 3, 2, 1 weeks) but no SV weight or anchored deadline."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-04-18",
+        "latest_absolute_due_date": "2026-04-18"
+      }
+    },
+    {
+      "cip": "CIP-0087",
+      "title": "Add Hex Trust as a Super Validator (Weight 3)",
+      "organisation": "Hex Trust",
+      "status": "Approved",
+      "created": "2025-09-26",
+      "approved": "2025-11-14",
+      "approved_note": "Changelog: 2025-11-12 \"New draft of the CIP\"; 2025-11-14 Approved.",
+      "max_total_weight": 3,
+      "initial_escrowed_weight": 3,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Hex Trust integration of Canton Coin and Canton Token Standard",
+          "acceptance_criterion": "Hex Trust customers can safekeep CC and any Canton Token Standard asset",
+          "deadline_text": "+180 days from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": 1,
+          "absolute_due_date": "2026-05-13"
+        },
+        {
+          "id": "D2",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "All CC burn attributable to Hex Trust-facilitated inelastic burn",
+          "deadline_text": "+180 days from Integration Go Live",
+          "anchor_type": "milestone",
+          "anchor": "D1 (Integration Go Live)",
+          "weight_earned": "+0.5 per $2M of inelastic burn generated on the network (Max +2)",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 2,
+        "earliest_absolute_due_date": "2026-05-13",
+        "latest_absolute_due_date": "2026-05-13"
+      }
+    },
+    {
+      "cip": "CIP-0090",
+      "title": "Onboard USDT0 to Canton — Outcome-Linked SV Weight (Max 10)",
+      "organisation": "USDT0 issuer (applicant not otherwise named)",
+      "status": "Approved",
+      "created": "2025-10-28",
+      "approved": "2025-11-24",
+      "approved_note": "Header is in bold-markdown format (**Created:** / **Approved:**), not a <pre> block. Changelog: 2025-11-26 \"Update CIP to match text in cip-vote.\"",
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "USDT0 (Bridged) — MVP Ready (Production)",
+          "acceptance_criterion": "Bridged USDT0 live on MainNet with production bridge, runbooks/SLOs, APIs/SDKs, >=1 venue route E2E, public docs",
+          "deadline_text": "≤ Day 180 from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+1.0",
+          "absolute_due_date": "2026-05-23"
+        },
+        {
+          "id": "D1a",
+          "name": "Bridged MVP — Time Acceleration",
+          "acceptance_criterion": "Linear between Day 60 and Day 180: Accel_bridged = max(0, min(1, (180 − d) / 120)) × 2.0",
+          "deadline_text": "Day 60 → Day 180",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "0.0 → +2.0",
+          "absolute_due_date": "2026-05-23"
+        },
+        {
+          "id": "D2",
+          "name": "Bridged Adoption Bonus",
+          "acceptance_criterion": "+0.5 per $1.5B notional transacted (excl. wash/loopbacks)",
+          "deadline_text": "Rolling 12-month window starting D1 acceptance",
+          "anchor_type": "milestone",
+          "anchor": "D1 acceptance",
+          "weight_earned": "0.0 → +2.0",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D3",
+          "name": "USDT0 (Native) — Ready on Canton",
+          "acceptance_criterion": "Native USDT0 live with issuer mint/burn keys, controls, APIs, venue flow, docs",
+          "deadline_text": "≤ Day 90 after the sooner of: (a) L0 go-live for USDT0↔Canton OR (b) 7/14/2026",
+          "anchor_type": "external/absolute (sooner of)",
+          "anchor": "sooner of LayerZero go-live for USDT0<->Canton or 2026-07-14",
+          "weight_earned": "+1.0",
+          "absolute_due_date": null,
+          "note": "Due date is null because the anchor is the earlier of an external event and an absolute date; latest possible due date = 2026-07-14 + 90 days = 2026-10-12."
+        },
+        {
+          "id": "D3a",
+          "name": "Native — Time Acceleration",
+          "acceptance_criterion": "Linear Day 10→90: Accel_native = max(0, min(1, (90 − d) / 80)) × 2.0",
+          "deadline_text": "Day 10 → Day 90 after the sooner of (a) L0 go-live OR (b) 7/14/2026",
+          "anchor_type": "external/absolute (sooner of)",
+          "anchor": "sooner of LayerZero go-live or 2026-07-14",
+          "weight_earned": "0.0 → +2.0",
+          "absolute_due_date": null,
+          "note": "Latest possible end = 2026-10-12."
+        },
+        {
+          "id": "D4",
+          "name": "Native Adoption Bonus",
+          "acceptance_criterion": "+0.5 per $1.5B native notional (excl. wash/loopbacks)",
+          "deadline_text": "Rolling 12-month window starting D3 acceptance",
+          "anchor_type": "milestone",
+          "anchor": "D3 acceptance",
+          "weight_earned": "0.0 → +2.0",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Aggregate cap 10.0 across D1, D1a, D2, D3, D3a, D4 (sum of maxima = 10).",
+        "\"Significance of 7/14/2026: Expiry of LayerZero integration deliverable per CIP-0065.\"",
+        "For D3/D3a the latest possible deadline is 2026-10-12 (if LayerZero go-live is not earlier)."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 6,
+        "earliest_absolute_due_date": "2026-05-23",
+        "latest_absolute_due_date": "2026-05-23"
+      }
+    },
+    {
+      "cip": "CIP-0091",
+      "title": "Add Zenith as an SV of Weight 10",
+      "organisation": "Zenith",
+      "status": "Approved",
+      "created": "2025-10-17",
+      "approved": "2025-11-04",
+      "approved_note": "Changelog: 2025-10-28 re-write; 2025-11-04 Approved; 2026-03-11 \"Text updated after request\" (link titled cip_0074_bitgo_interpretation); 2026-06-10 \"Approved languge merged into CIP\".",
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "I1",
+          "name": "MVP",
+          "acceptance_criterion": "Canton<->Zenith EVM tx processing; verify() in Daml; Zenith EVM testnet on Canton test network; feature-complete upstream PRs with preliminary maintainer approval",
+          "deadline_text": "+4 months from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+1",
+          "absolute_due_date": "2026-03-04"
+        },
+        {
+          "id": "I2",
+          "name": "Demonstrated composability based on Canton main branch",
+          "acceptance_criterion": "Zenith EVM on local multi-node network built from Canton/Splice main branches (changes accepted for next MainNet upgrade); atomic swap with Daml-native asset via Daml-native DEX",
+          "deadline_text": "+4 Months from MVP",
+          "anchor_type": "milestone",
+          "anchor": "I1 (MVP)",
+          "weight_earned": "+3",
+          "absolute_due_date": null
+        },
+        {
+          "id": "G1",
+          "name": "Enterprise Production Deployments",
+          "acceptance_criterion": "Canton Foundation-approved enterprise deploying > $10M TVL on Canton via VBs",
+          "deadline_text": "Within 12 months of the MainNet upgrade including external_call()",
+          "anchor_type": "external",
+          "anchor": "MainNet upgrade including external_call()",
+          "weight_earned": "+0.5 per approved party up to a max of +1.5",
+          "absolute_due_date": null
+        },
+        {
+          "id": "G2",
+          "name": "Canton Coin Burn Contribution",
+          "acceptance_criterion": "All CC burn attributed to VBs",
+          "deadline_text": "Within 12 months of the MainNet upgrade including external_call()",
+          "anchor_type": "external",
+          "anchor": "MainNet upgrade including external_call()",
+          "weight_earned": "+0.5 per 10M of $CC burn up to a max of +3",
+          "absolute_due_date": null
+        },
+        {
+          "id": "G3",
+          "name": "Real-world assets (RWAs) issued",
+          "acceptance_criterion": "Over $1 billion in RWAs issued on Canton Virtual Blockchains",
+          "deadline_text": "Within 12 months of the MainNet upgrade including external_call()",
+          "anchor_type": "external",
+          "anchor": "MainNet upgrade including external_call()",
+          "weight_earned": "+1.5",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Integration (4) + Growth and Adoption (6) = 10; growth weights \"Predicated upon demonstration of Daml to VB composability\".",
+        "\"+0.5 per 10M of $CC burn\" — unit ambiguous (CC or USD).",
+        "Text was amended 2026-03-11 / 2026-06-10 after approval; extraction reflects current text."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 5,
+        "earliest_absolute_due_date": "2026-03-04",
+        "latest_absolute_due_date": "2026-03-04"
+      }
+    },
+    {
+      "cip": "CIP-0093",
+      "title": "Add Bosphorus SV (BSV) as a Super Validator Max Weight 6",
+      "organisation": "Bosphorus SV (BSV)",
+      "status": "Approved",
+      "created": "2025-11-07",
+      "approved": "2025-11-24",
+      "approved_note": null,
+      "max_total_weight": 6,
+      "initial_escrowed_weight": 6,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "C1",
+          "name": "Total Canton Coin Burn Attributed",
+          "acceptance_criterion": "Sum of CC burned by transactions traceable to US Treasuries, Stablecoins, TRY and related assets across BSV-onboarded wallets/apps (excluding CC-related burn); \"If burn after the 12 month period dips > 50% from the average over the reward period, BSV will lose any weight awarded for transaction activity at that point going forward.\"",
+          "deadline_text": "+ 12 months from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+ 0.5 SV Weight per $2m of Inelastic Burn, Max +5",
+          "absolute_due_date": "2026-11-24"
+        },
+        {
+          "id": "C2",
+          "name": "Issuance of TRY Government Bonds",
+          "acceptance_criterion": "Successful minting of TRY Government bonds with > $10m of TVL held by non-BSV entities",
+          "deadline_text": "+18 months from CIP Approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+1",
+          "absolute_due_date": "2027-05-24"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Header/Proposal say \"max Weight 6\"; table maxima 5 + 1 = 6.",
+        "Ongoing post-period condition on burn (>50% dip removes transaction-activity weight going forward).",
+        "Onboarded parties declared to, and burn confirmed by, the Accountability Subcommittee."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 2,
+        "earliest_absolute_due_date": "2026-11-24",
+        "latest_absolute_due_date": "2027-05-24"
+      }
+    },
+    {
+      "cip": "CIP-0094",
+      "title": "Add Blockdaemon as a Super Validator (weight 5.0)",
+      "organisation": "Blockdaemon",
+      "status": "Approved",
+      "created": "2025-12-01",
+      "approved": "2025-12-31",
+      "approved_note": null,
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "\"set up by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "User Base Transaction Volume Bonus",
+          "acceptance_criterion": "Additional institutional inelastic transaction activity via Blockdaemon products/infrastructure",
+          "deadline_text": "270 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max +2 weighting; +0.5 per 10 million transactions",
+          "absolute_due_date": "2026-09-27"
+        },
+        {
+          "id": "D2",
+          "name": "Institutional Wallet Support",
+          "acceptance_criterion": "Full Canton integration in institutional MPC self-custody wallet; first customer > $10m of assets held in wallet",
+          "deadline_text": "180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+1.0 weighting",
+          "absolute_due_date": "2026-06-29"
+        },
+        {
+          "id": "D3",
+          "name": "Institutional Wallet - Adoption Bonus",
+          "acceptance_criterion": "+0.5 per additional $500m TVL from new customers or novel transaction types on Blockdaemon infra",
+          "deadline_text": "180 days from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Max +2 weighting",
+          "absolute_due_date": "2026-06-29"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Adoption bonus deadline is anchored to CIP approval (same day as wallet support), not to go-live."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-06-29",
+        "latest_absolute_due_date": "2026-09-27"
+      }
+    },
+    {
+      "cip": "CIP-0095",
+      "title": "Onboard Mesh to Canton — Outcome-Linked SV Weight (Max 10)",
+      "organisation": "Mesh",
+      "status": "Approved",
+      "created": "2025-12-09",
+      "approved": "2026-01-09",
+      "approved_note": "File contains the whole CIP twice, separated by a leftover merge-conflict marker \"=======\" (first copy opens its header with \"</pre>\"); both copies are identical in substance.",
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Mesh Payment Network Production Canton Integration",
+          "acceptance_criterion": "Mobilize Canton Token Standard assets to/from MainNet in production; >= $10M customer volume; press release naming Canton preferred \"Privacy Chain\"",
+          "deadline_text": "≤ Day 180 from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+2.0",
+          "absolute_due_date": "2026-07-08"
+        },
+        {
+          "id": "D1a",
+          "name": "Production Integration — Time Acceleration",
+          "acceptance_criterion": "Accel = max(0, min(1, (180 − d) / 120)) × 2.0, d = days from approval to D1 acceptance",
+          "deadline_text": "Day 60 → Day 180",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "0.0 → +2.0",
+          "absolute_due_date": "2026-07-08"
+        },
+        {
+          "id": "D2",
+          "name": "Adoption Bonus - Notional Based Volume",
+          "acceptance_criterion": "+0.5 per $500M verified Mesh-enabled notional (cap $3B)",
+          "deadline_text": "12 months starting on the effective date of D1 completion",
+          "anchor_type": "milestone",
+          "anchor": "D1 completion",
+          "weight_earned": "0.0 → +3.0",
+          "absolute_due_date": null
+        },
+        {
+          "id": "D3",
+          "name": "Adoption Bonus - Notional Based Volume",
+          "acceptance_criterion": "+0.5 per $1B verified Mesh-enabled notional (cap $6B)",
+          "deadline_text": "12 months from completion of D2 or 24 months from completion of D1",
+          "anchor_type": "milestone",
+          "anchor": "D2 completion or D1 completion",
+          "weight_earned": "0.0 → +3.0",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "D3 window \"12 months from completion of D2 or 24 months from completion of D1\" does not specify which applies (earlier/later).",
+        "CIP-0045 clause adds \"provided the network has capacity to onboard this SV\"."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 4,
+        "earliest_absolute_due_date": "2026-07-08",
+        "latest_absolute_due_date": "2026-07-08"
+      }
+    },
+    {
+      "cip": "CIP-0097",
+      "title": "Nasdaq Super Validator Participation",
+      "organisation": "Nasdaq",
+      "status": "Approved",
+      "created": "2025-12-30",
+      "approved": "2026-01-05",
+      "approved_note": null,
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"Unlike other CIPs, this program contains confidential commitments to the ecosystem. Those commitments and milestones have been agreed with the Tokenomics and Accountability Committees and will be made available to the public when appropriate and as needed.\" / \"Nasdaq's specific commitments will not be made public until the Foundation and Nasdaq determine it is appropriate.\"",
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the Canton Foundation; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the Canton Foundation node configuration, and the total SV weight of the Canton Foundation SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "No public milestones, deadlines or term.",
+        "The Accountability Committee confirms milestones; \"Upon confirmation, rewards associated with milestones will be released from escrow.\""
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 0,
+        "earliest_absolute_due_date": null,
+        "latest_absolute_due_date": null
+      }
+    },
+    {
+      "cip": "CIP-0102",
+      "title": "Add Tharimmune as a Super Validator (SV)",
+      "organisation": "Tharimmune, Inc.",
+      "status": "Approved",
+      "created": "2026-01-17",
+      "approved": "2026-01-21",
+      "approved_note": "Changelog: 2026-01-22 \"Corrected github file to match the vote\".",
+      "max_total_weight": 4,
+      "initial_escrowed_weight": 4,
+      "initial_escrowed_weight_basis": "\"total requested reward weight 4, granted into escrow and released in milestone-based tranches\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Publish Quarterly Ecosystem Research Report",
+          "acceptance_criterion": "Quarterly report (on-chain analytics, community, governance/tokenomics, tech updates, dashboard stats) filed with Nasdaq / PR; \"Weight earned quarterly until the CIP max weight is earned, then continue quarterly for an additional 1 year.\"",
+          "deadline_text": "2.25 years from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+2 Max (+0.25 per quarterly report)",
+          "absolute_due_date": "2028-04-21"
+        },
+        {
+          "id": "D2",
+          "name": "Hold Public Quarterly Community Webinar",
+          "acceptance_criterion": "Public quarterly webinar (min 45 min); \"Weight earned per webinar for 2 years following CIP approval.\"",
+          "deadline_text": "2.25 years from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+2 Max (+0.25 per quarterly webinar)",
+          "absolute_due_date": "2028-04-21"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the GSF; Remaining SV Weight assigned to the `extraBeneficiary` SV will be removed from the GSF node configuration, and the total SV weight of the GSF SV node will be reduced by the same amount by a vote of the Super Validators.; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "2.25 years computed as 27 calendar months.",
+        "Recurring quarterly tranches (8 x 0.25 each); D2 text says weight earned \"for 2 years following CIP approval\" (2028-01-21) while the deadline is 2.25 years."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 2,
+        "earliest_absolute_due_date": "2028-04-21",
+        "latest_absolute_due_date": "2028-04-21"
+      }
+    },
+    {
+      "cip": "CIP-0106",
+      "title": "Add QCP Group as a Super Validator (weight 5.0)",
+      "organisation": "QCP Group",
+      "status": "Approved",
+      "created": "2026-02-01",
+      "approved": null,
+      "approved_note": "Header has no Approved field. Changelog: \"2026-02-01: Created\", \"2026-03-03: Updated\", \"2026-03-05: Approved\". Due dates computed from changelog approval 2026-03-05, with anchor not stated in table (assumed approval).",
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "\"configured by the Canton Foundation or an approved SV operator with the full maximum weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Institutional Collateral Application Development",
+          "acceptance_criterion": "End-to-end institutional collateral lifecycle workflow (agreement, margin allocation, confirmation, settlement) on a Canton utility app with test-trade evidence",
+          "deadline_text": "3 months",
+          "anchor_type": "approval (implied)",
+          "anchor": "not stated; assumed CIP approval (changelog 2026-03-05)",
+          "weight_earned": "+0.5",
+          "absolute_due_date": "2026-06-05"
+        },
+        {
+          "id": "D2",
+          "name": "RWA Tokenization Enablement",
+          "acceptance_criterion": "Onboard 10 Tokenized Money Market Funds onto a tokenization platform, verifiable on Canton",
+          "deadline_text": "3 months",
+          "anchor_type": "approval (implied)",
+          "anchor": "not stated; assumed CIP approval (changelog 2026-03-05)",
+          "weight_earned": "+0.5",
+          "absolute_due_date": "2026-06-05"
+        },
+        {
+          "id": "D3",
+          "name": "Canton Coin Burn via Activity",
+          "acceptance_criterion": "+0.5 per USD $2M equivalent CC burned attributable to application-driven activity (traceable on-chain; pro-rata attribution)",
+          "deadline_text": "18 months",
+          "anchor_type": "approval (implied)",
+          "anchor": "not stated; assumed CIP approval (changelog 2026-03-05)",
+          "weight_earned": "+4.0 max",
+          "absolute_due_date": "2027-09-05"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "Failure to deliver milestones: QCP will be notified of missed deliverables. Remaining unearned weight is removed from the escrow SV.",
+      "notes": [
+        "Deadlines written only as \"3 months\"/\"18 months\" with no anchor, and header lacks an approval date: computed dates are assumptions.",
+        "Perpetual sustainment requirement: \">50% decline in the rolling 2-quarter average eligible burn relative to the Reference Rate\" for 2 consecutive quarters -> \"the Accountability Committee shall apply a proportional weight reduction.\"",
+        "Consequence clause does not mention the TWG recommendation on Unclaimed Rewards."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-06-05",
+        "latest_absolute_due_date": "2027-09-05"
+      }
+    },
+    {
+      "cip": "CIP-0109",
+      "title": "Visa Super Validator Participation",
+      "organisation": "Visa",
+      "status": "Approved",
+      "created": "2026-03-20",
+      "approved": "2026-03-23",
+      "approved_note": null,
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"set up by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"This program contains confidential commitments to the ecosystem. Those commitments and milestones have been agreed with the Tokenomics and Accountability Committees and will be made available to the public when appropriate.\" / \"Visa's specific commitments will not be made public until the Foundation and Visa determine it is appropriate.\"",
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: The Applicant will be notified by the Foundation that the deliverable has not been met. Remaining SV Weight on the representative SV will be removed from SV operator configurations. The Tokenomics Working Group will make a recommendation to the SVs regarding the disposition of the Unclaimed Rewards.",
+      "notes": [
+        "No public milestones, deadlines or term.",
+        "Mixes \"extraBeneficiary\" and \"representative SV\" terminology."
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 0,
+        "earliest_absolute_due_date": null,
+        "latest_absolute_due_date": null
+      }
+    },
+    {
+      "cip": "CIP-0110",
+      "title": "Add Apollo as max weight 7 SV",
+      "organisation": "Apollo",
+      "status": "Approved",
+      "created": "2026-03-19",
+      "approved": "2026-03-24",
+      "approved_note": "Changelog only contains \"2026-03-20: draft published\" (no approval entry; draft date differs from header Created 2026-03-19).",
+      "max_total_weight": 7,
+      "initial_escrowed_weight": 7,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"Unlike other CIPs, this program contains confidential commitments to the ecosystem.\" / \"Apollo's specific commitments, timelines, and commercial details will remain confidential until the Foundation and Apollo determine it is appropriate to disclose them.\"",
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the Foundation; Remaining SV Weight on the representative SV will be removed from the SV Operator configs; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "No public milestones; timelines explicitly confidential."
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 0,
+        "earliest_absolute_due_date": null,
+        "latest_absolute_due_date": null
+      }
+    },
+    {
+      "cip": "CIP-0113",
+      "title": "Add Further Asset Management as a Super Validator (Weight 8.0)",
+      "organisation": "Further Asset Management",
+      "status": "Approved",
+      "created": "2025-11-26",
+      "approved": "2026-04-01",
+      "approved_note": "Changelog: Created 2025-11-26, Updated 2026-03-03, Approved 2026-04-01.",
+      "max_total_weight": 8,
+      "initial_escrowed_weight": 8,
+      "initial_escrowed_weight_basis": "\"An extraBeneficiary PartyID will be configured in escrow with the full 8.0 weight.\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "D1",
+          "name": "Atomic Off-Exchange Settlement (BridgePort)",
+          "acceptance_criterion": "Margin financing app go-live; activity reflects real customer trading",
+          "deadline_text": "6 months",
+          "anchor_type": "approval (implied)",
+          "anchor": "not stated; assumed CIP approval",
+          "weight_earned": "+0.5 (Infra) + 0.5 per $2M equivalent of Canton Coin burned, up to +1.5 max",
+          "absolute_due_date": "2026-10-01"
+        },
+        {
+          "id": "D2",
+          "name": "Regulated Settlement & Fiat On-Ramp (Pave Bank)",
+          "acceptance_criterion": "Successful CIP-0056 asset mint/redeem; live fiat connectivity",
+          "deadline_text": "12 months",
+          "anchor_type": "approval (implied)",
+          "anchor": "not stated; assumed CIP approval",
+          "weight_earned": "+0.5 (Infra) + 0.5 per $200M of CIP-0056 assets transferred by independent customers, up to +1.5 max",
+          "absolute_due_date": "2027-04-01"
+        },
+        {
+          "id": "D3",
+          "name": "Sovereign Asset Origination & ADX Integration (Kaio)",
+          "acceptance_criterion": "Zodia integration; $100M+ customer TVL; ADX POC/Issuance",
+          "deadline_text": "12 months",
+          "anchor_type": "approval (implied)",
+          "anchor": "not stated; assumed CIP approval",
+          "weight_earned": "+0.5 (Infra) + 0.5 per $250M TVL, up to +1.5 max",
+          "absolute_due_date": "2027-04-01"
+        },
+        {
+          "id": "D4",
+          "name": "Cross-Border Institutional Payments (Fuze)",
+          "acceptance_criterion": "Live payments app; regulated UAE fiat on/off-ramp",
+          "deadline_text": "12 months",
+          "anchor_type": "approval (implied)",
+          "anchor": "not stated; assumed CIP approval",
+          "weight_earned": "+0.5 (Infra) + 0.5 per $2M in Canton Coin fees burned, up to +1.5 max",
+          "absolute_due_date": "2027-04-01"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": null,
+      "consequence_clause_note": "No standard missed-deadline clause. Only: \"Failure to maintain Reference Rates allows the Accountability Committee to recommend weight removal.\" and \"If the decline persists for 2 consecutive quarters, the Accountability Committee reserves the right to apply a proportional weight reduction.\"",
+      "notes": [
+        "Deadlines have no stated anchor; computed from approval date as an assumption.",
+        "\"+1.5 max\" ambiguous: activity tranche max 1.5 in addition to +0.5 infra (4 x (0.5+1.5) = 8 matches total).",
+        "Activity weight (+6.0 max) subject to perpetual sustainment / re-earn rules; infrastructure weight (+2.0) \"is not subject to clawback\"."
+      ],
+      "confidentiality_quote": null,
+      "summary": {
+        "milestone_count": 4,
+        "earliest_absolute_due_date": "2026-10-01",
+        "latest_absolute_due_date": "2027-04-01"
+      }
+    },
+    {
+      "cip": "CIP-0114",
+      "title": "Digital Asset Treasury (DAT) SV Program",
+      "organisation": "Program (any qualifying Digital Asset Treasury company; no named applicant)",
+      "status": "Approved",
+      "created": "2026-03-19",
+      "approved": "2026-04-16",
+      "approved_note": null,
+      "max_total_weight": "20 (program cap across all DATs)",
+      "initial_escrowed_weight": 0,
+      "initial_escrowed_weight_basis": "\"No pre-escrow: SV Weight is escrowed only upon a weight allocation being confirmed by the Canton Foundation (CF) or its delegates and the necessary on-chain votes completing successfully.\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "ENROLL",
+          "name": "Enrollment window",
+          "acceptance_criterion": "DAT qualification: > $100M AUM, strategic market, primary purpose test, attestation, CF approval; 1 SV Weight per $50 million equivalent of CC acquired at qualification",
+          "deadline_text": "Enrollment window: 12 months from CIP approval",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "up to 20 total across program",
+          "absolute_due_date": "2027-04-16"
+        },
+        {
+          "id": "Q1",
+          "name": "First quarterly review after allocation",
+          "acceptance_criterion": "DAT holds CC >= CC Quantum",
+          "deadline_text": "first quarterly review following weight allocation",
+          "anchor_type": "milestone",
+          "anchor": "acceptance into program / weight allocation",
+          "weight_earned": "50% of allocated weight released",
+          "absolute_due_date": null
+        },
+        {
+          "id": "Q2-Q5",
+          "name": "Next four quarterly reviews",
+          "acceptance_criterion": "DAT holds CC >= CC Quantum at each review",
+          "deadline_text": "each successive quarter over the next four quarters",
+          "anchor_type": "milestone",
+          "anchor": "previous quarterly review",
+          "weight_earned": "1/4 of the remaining 50% per quarter",
+          "absolute_due_date": null
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "\"If at any quarterly checkpoint the DAT holds less than the current CC Quantum (\\\"High Water Mark\\\"): The DAT's SV weight is reduced ... All pending weight and reward releases are paused ... In the event they fail to do so during the second quarterly checkpoint any escrowed rewards associated with the reduced weight are burnt and the SV no longer has a claim on them. Similarly, the reduced weight is returned to the program's weight pool\" / \"In the event that a DAT has spent two quarterly cycles with CC holdings < Floor CC Quantum, the DAT is removed from this program, its SV weight is reduced to 0, any escrowed reward coupons allocated to the DAT are burned, and it forfeits its SV.\"",
+      "notes": [
+        "Program CIP, not a single-applicant grant; quarterly cadence is relative to each DAT's acceptance, so no absolute due dates except enrollment window close.",
+        "Administered by the CF Tokenomics Committee aided by the Accountability Working Group.",
+        "\"Each time weight is released to the SV, any accrued and escrowed CC associated with that weight is released to the DAT.\""
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2027-04-16",
+        "latest_absolute_due_date": "2027-04-16"
+      }
+    },
+    {
+      "cip": "CIP-0115",
+      "title": "Add Societe Generale as a Super Validator (max weight 8)",
+      "organisation": "Societe Generale",
+      "status": "Approved",
+      "created": "2026-04-24",
+      "approved": "2026-04-27",
+      "approved_note": null,
+      "max_total_weight": 8,
+      "initial_escrowed_weight": 8,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "1",
+          "name": "SG Accepts Tokenized Assets as Collateral",
+          "acceptance_criterion": "SG Prime Services & Clearing accepts tokenized Canton assets as collateral; >=1 production collateral tx on mainnet (min $10m)",
+          "deadline_text": "+9 mo.",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column header \"Deadline from CIP Approval\")",
+          "weight_earned": "+1",
+          "absolute_due_date": "2027-01-27"
+        },
+        {
+          "id": "2",
+          "name": "Collateral Acceleration Bonus",
+          "acceptance_criterion": "Formula: max(0, min(1, (270 - d) / 90)), d = days from CIP Approval to completion of Deliverable 1",
+          "deadline_text": "Day 90 -> Day 270",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+0 -> +1",
+          "absolute_due_date": "2027-01-22"
+        },
+        {
+          "id": "3",
+          "name": "SG acts as Counterparty on repo transactions",
+          "acceptance_criterion": "+1 for >=1 approved production tokenized UST repo (min $10m) as agent; +1 as principal",
+          "deadline_text": "+15 mo.",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+2",
+          "absolute_due_date": "2027-07-27"
+        },
+        {
+          "id": "4",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "Collateral: +1 per distinct asset reaching $1B cumulative (max 3); +1 when total collateral reaches $5B before end of 2027. Repo: +1 when cumulative tokenized UST repo reaches $5B before end of 2027. Capped +3",
+          "deadline_text": "+15 mo.",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (sub-conditions also reference \"before end of 2027\")",
+          "weight_earned": "Up to +3",
+          "absolute_due_date": "2027-07-27"
+        },
+        {
+          "id": "5",
+          "name": "EURCV/USDCV on Canton",
+          "acceptance_criterion": "SG Forge deploys USDCV and EURCV on Canton; >=1 production tx (min $10m)",
+          "deadline_text": "By Dec 31, 2026",
+          "anchor_type": "absolute",
+          "anchor": "2026-12-31",
+          "weight_earned": "+1",
+          "absolute_due_date": "2026-12-31"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the Foundation; Remaining SV Weight on the representative SV will be removed from the SV Operator configs; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Deliverable 2 scope text says linear \"from a maximum of +1 if ready in less than 90 days, to +0 at 180 days\" but the window/formula use Day 90 -> Day 270 (+0 at day 270); due date uses 270 days (2027-01-22), which is earlier than the +9 mo. Deliverable 1 deadline (2027-01-27).",
+        "Deliverable 4 has an internal \"before end of 2027\" (2027-12-31) condition for the $5B tranches, later than its +15 mo. deadline (2027-07-27).",
+        "Months computed as calendar months."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 5,
+        "earliest_absolute_due_date": "2026-12-31",
+        "latest_absolute_due_date": "2027-07-27"
+      }
+    },
+    {
+      "cip": "CIP-0118",
+      "title": "Add Franklin Templeton as a Super Validator (max weight 5)",
+      "organisation": "Franklin Templeton",
+      "status": "Approved",
+      "created": "2026-06-04",
+      "approved": "2026-06-10",
+      "approved_note": null,
+      "max_total_weight": 5,
+      "initial_escrowed_weight": 5,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Treasury Management",
+          "acceptance_criterion": ">=1 production treasury management tx on Canton Mainnet (tokenized UST, digital cash, or repo/reverse repo); may be done up to 2 weeks prior to CIP activation",
+          "deadline_text": "+6 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column \"Deadline from CIP Approval\")",
+          "weight_earned": "+1",
+          "absolute_due_date": "2026-12-10"
+        },
+        {
+          "id": "M2",
+          "name": "Create / Redeem Capability",
+          "acceptance_criterion": "24x7 create/redeem for tokenized fund with on-chain cash delivery and return; operational capability",
+          "deadline_text": "+9 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "+1",
+          "absolute_due_date": "2027-03-10"
+        },
+        {
+          "id": "M3",
+          "name": "Adoption Bonus",
+          "acceptance_criterion": "+0.5 per $100 million of qualifying production create/redeem volume via on-chain treasury and cash mechanism",
+          "deadline_text": "+18 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval",
+          "weight_earned": "Up to +3",
+          "absolute_due_date": "2027-12-10"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the Foundation; Remaining SV Weight on the representative SV will be removed from the SV Operator configs; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 3,
+        "earliest_absolute_due_date": "2026-12-10",
+        "latest_absolute_due_date": "2027-12-10"
+      }
+    },
+    {
+      "cip": "CIP-0122",
+      "title": "Add TreasurySpring Management (Jersey) Limited as a Super Validator (max weight 4)",
+      "organisation": "TreasurySpring Management (Jersey) Limited",
+      "status": "Approved",
+      "created": "2026-06-16",
+      "approved": "2026-09-09",
+      "approved_note": "Changelog: 2026-09-08 \"Text Updated to version 2.5\"; 2026-09-09 CIP Approved.",
+      "max_total_weight": 4,
+      "initial_escrowed_weight": 4,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [
+        {
+          "id": "1",
+          "name": "On-chain RWA and issuance scale",
+          "acceptance_criterion": "$10m TVL maintained >=1 month; $15m cumulative gross issuance; thereafter $15m per rolling 3-month period",
+          "deadline_text": "3 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column \"Deadline from CIP approval\")",
+          "weight_earned": "1.0 (maximum cumulative 1.0)",
+          "absolute_due_date": "2026-12-09"
+        },
+        {
+          "id": "2",
+          "name": "On-chain RWA and issuance scale",
+          "acceptance_criterion": "$1bn TVL maintained >=1 month; $1.5bn cumulative gross issuance; thereafter $750m per rolling 3-month period",
+          "deadline_text": "6 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column \"Deadline from CIP approval\")",
+          "weight_earned": "0.5 (maximum cumulative 1.5)",
+          "absolute_due_date": "2027-03-09"
+        },
+        {
+          "id": "3",
+          "name": "On-chain RWA and issuance scale",
+          "acceptance_criterion": "$2bn TVL maintained >=1 month; $5bn cumulative gross issuance; thereafter $1.9bn per rolling 3-month period",
+          "deadline_text": "8 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column \"Deadline from CIP approval\")",
+          "weight_earned": "0.5 (maximum cumulative 2.0)",
+          "absolute_due_date": "2027-05-09"
+        },
+        {
+          "id": "4",
+          "name": "On-chain RWA and issuance scale",
+          "acceptance_criterion": "$3bn TVL maintained >=1 month; $10.5bn cumulative gross issuance; thereafter $3.2bn per rolling 3-month period",
+          "deadline_text": "10 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column \"Deadline from CIP approval\")",
+          "weight_earned": "0.5 (maximum cumulative 2.5)",
+          "absolute_due_date": "2027-07-09"
+        },
+        {
+          "id": "5",
+          "name": "On-chain RWA and issuance scale",
+          "acceptance_criterion": "$4bn TVL maintained >=1 month; $14bn cumulative gross issuance; thereafter $3.8bn per rolling 3-month period",
+          "deadline_text": "11 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column \"Deadline from CIP approval\")",
+          "weight_earned": "0.5 (maximum cumulative 3.0)",
+          "absolute_due_date": "2027-08-09"
+        },
+        {
+          "id": "6",
+          "name": "On-chain RWA and issuance scale",
+          "acceptance_criterion": "$5bn TVL maintained >=1 month; $20bn cumulative gross issuance; thereafter $5bn per rolling 3-month period",
+          "deadline_text": "12 months",
+          "anchor_type": "approval",
+          "anchor": "CIP approval (column \"Deadline from CIP approval\")",
+          "weight_earned": "1.0 (maximum cumulative 4.0)",
+          "absolute_due_date": "2027-09-09"
+        }
+      ],
+      "milestones_confidential": false,
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the Foundation; Remaining SV Weight on the representative SV will be removed from the SV Operator configs; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "\"For each deliverable, the applicable TVL threshold and cumulative gross issuance volume threshold must be reached by the stated deadline. The relevant weight will be earned once the TVL threshold has then been maintained at or above the required level for the one-month period following the deadline.\" (so earning is confirmed ~1 month after each due date).",
+        "\"Successful completion of each deliverable in its entirety is not a prerequisite for successfully completing a subsequent or other deliverable.\"",
+        "Perpetual sustainment: shortfall (<50% of Reference Rate) at three consecutive month-ends -> \"the Accountability Committee may recommend a reduction of up to the incremental SV weight associated with the affected deliverable\"; re-earn allowed.",
+        "\"confidential\" appears only regarding client confidentiality in RWA.xyz reporting, not milestones."
+      ],
+      "confidentiality_quote": null,
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 6,
+        "earliest_absolute_due_date": "2026-12-09",
+        "latest_absolute_due_date": "2027-09-09"
+      }
+    },
+    {
+      "cip": "CIP-0123",
+      "title": "Add a16z crypto as a Super Validator (weight up to 10.0)",
+      "organisation": "a16z crypto",
+      "status": "Proposed",
+      "created": "2026-09-14",
+      "approved": "2026-09-21",
+      "approved_note": "Inconsistent: header Status is \"Proposed\" while header Approved is 2026-09-21 and changelog says \"2026-09-21: Approval\".",
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"The specific deliverables and milestones for a16z crypto have been agreed upon privately with the Canton Foundation's Tokenomics and SVAC Committees.\" / \"a16z crypto's specific commitments, timelines, and commercial details will remain confidential until the Foundation and a16z crypto determine it is appropriate to disclose them.\"",
+      "consequence_clause": "If any milestone and associated rewards are not achieve by the deadline: Applicant will be notified they have not met a deliverable by the Foundation; Remaining SV Weight on the representative SV will be removed from the SV Operator configs; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Milestones reviewed by SVAC (Super Validator Accountability Committee)."
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 0,
+        "earliest_absolute_due_date": null,
+        "latest_absolute_due_date": null
+      }
+    },
+    {
+      "cip": "CIP-0124",
+      "title": "London Stock Exchange Group (LSEG) Super Validator Participation",
+      "organisation": "London Stock Exchange Group (LSEG)",
+      "status": "Approved",
+      "created": "2026-09-02",
+      "approved": "2026-09-22",
+      "approved_note": "Header Created 2026-09-02 but changelog says \"2026-09-08: draft published\".",
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"setup by the Foundation, or another SV node operator approved to provide SV rewards escrow services, with an SV Weight at the maximum earnable weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"Unlike other CIPs, this program contains confidential commitments to the ecosystem.\" / \"LSEG's specific commitments, timelines, and commercial details will remain confidential until the Foundation and LSEG determine it is appropriate to disclose them.\"",
+      "consequence_clause": "If any milestones and associated rewards are not achieved by the deadline: Applicant will be notified they have not met a deliverable by the Foundation; Remaining SV Weight on the representative SV will be removed from the SV Operator configs; The Tokenomics Working Group will make a recommendation to the SVs on what to do with the Unclaimed Rewards",
+      "notes": [
+        "Milestones reviewed by SVAC."
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 0,
+        "earliest_absolute_due_date": null,
+        "latest_absolute_due_date": null
+      }
+    },
+    {
+      "cip": "CIP-0126",
+      "title": "Marex Super Validator Weight 10",
+      "organisation": "Marex",
+      "status": "Approved",
+      "created": "2026-09-14",
+      "approved": "2026-09-25",
+      "approved_note": null,
+      "max_total_weight": 10,
+      "initial_escrowed_weight": 10,
+      "initial_escrowed_weight_basis": "\"established by the Canton Foundation, or by another SV node operator approved to provide SV rewards escrow services, with SV Weight equal to the maximum earnable Weight\"",
+      "weight_granted_immediately": 0,
+      "milestones": [],
+      "milestones_confidential": true,
+      "confidentiality_quote": "\"The specific deliverables, milestones, deadlines, verification requirements, and associated Weight allocations for Marex have been agreed privately with the Tokenomics Committee and SVAC.\" / \"Marex's specific commitments, milestones, timelines, regulatory materials, supervisory materials, and commercial details will remain confidential until the Canton Foundation and Marex determine that disclosure is appropriate.\"",
+      "consequence_clause": "If a milestone and its associated rewards are not achieved by the applicable deadline: The Canton Foundation will notify the Applicant that the deliverable has not been met. The remaining SV Weight associated with the unmet milestone will be removed from the applicable SV operator configurations. The Tokenomics Working Group will make a recommendation to the Super Validators regarding the disposition of the related Unclaimed Rewards.",
+      "notes": [
+        "Program areas (public, unweighted): regulated customer access, institutional settlement, collateral integration, production network activity, broader adoption."
+      ],
+      "consequence_clause_note": null,
+      "summary": {
+        "milestone_count": 0,
+        "earliest_absolute_due_date": null,
+        "latest_absolute_due_date": null
+      }
+    }
+  ]
+}

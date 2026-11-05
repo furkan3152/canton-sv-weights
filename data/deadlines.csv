@@ -1,0 +1,39 @@
+cip,organisation,approved,escrow_now,active_now,status,milestones,dated_milestones,passed_deadlines,last_due_date,timeline_confidential,review_due,all_dated_deadlines_passed
+CIP-0060,Zero Hash,2025-05-13,4.0,3.5,partly earned,6,3,3,2025-11-09,False,True,True
+CIP-0069,Ledger,2025-07-21,3.0,2.0,partly earned,4,3,3,2026-01-17,False,True,True
+CIP-0071,Ubyx,2025-08-11,1.5,3.45,partly earned,3,3,3,2026-02-07,False,True,True
+CIP-0074,BitGo,2025-08-27,2.0,2.8667,partly earned,3,2,2,2026-02-23,False,True,True
+CIP-0091,Zenith,2025-11-04,6.0,4.0,partly earned,5,1,1,2026-03-04,False,True,True
+CIP-0077,Taurus,2025-09-12,2.0,1.8,partly earned,3,2,2,2026-03-11,False,True,True
+CIP-0075,Zodia Custody,2025-09-26,5.0,0.0,fully escrowed,6,4,4,2026-03-25,False,True,True
+CIP-0080,Republic,2025-10-06,2.0,4.0,partly earned,4,1,1,2026-04-04,False,True,True
+CIP-0085,Talos (Coin Metrics existing SV preserved),2025-10-09,1.0,5.4083,partly earned,7,4,4,2026-04-07,False,True,True
+CIP-0086,ChainSafe,2025-10-20,2.0,1.95,partly earned,3,2,2,2026-04-18,False,True,True
+CIP-0087,Hex Trust,2025-11-14,2.0,1.0,partly earned,2,1,1,2026-05-13,False,True,True
+CIP-0090,USDT0 issuer (applicant not otherwise named),2025-11-24,10.0,0.0,fully escrowed,6,2,2,2026-05-23,False,True,True
+CIP-0095,Mesh,2026-01-09,10.0,0.0,fully escrowed,4,2,2,2026-07-08,False,True,True
+CIP-0065,"LayerZero Labs, Wormhole Labs, Chainlink (three applicants)",2025-07-14,4.5,4.1,partly earned,8,4,4,2026-07-14,False,True,True
+CIP-0081,YZi Labs,2025-09-26,10.0,0.0,fully escrowed,1,1,1,2026-09-26,True,True,True
+CIP-0094,Blockdaemon,2025-12-31,4.0,1.0,partly earned,3,3,3,2026-09-27,False,True,True
+CIP-0113,Further Asset Management,2026-04-01,8.0,0.0,fully escrowed,4,4,1,2027-04-01,False,True,False
+CIP-0106,QCP Group,,4.0,1.0,partly earned,3,3,2,2027-09-05,False,True,False
+CIP-0083,DTCC,TBD,10.0,0.0,fully escrowed,0,0,0,,True,False,False
+CIP-0097,Nasdaq,2026-01-05,10.0,0.0,fully escrowed,0,0,0,,True,False,False
+CIP-0109,Visa,2026-03-23,10.0,0.0,fully escrowed,0,0,0,,True,False,False
+CIP-0110,Apollo,2026-03-24,7.0,0.0,fully escrowed,0,0,0,,True,False,False
+CIP-0123,a16z crypto,2026-09-21,10.0,0.0,fully escrowed,0,0,0,,True,False,False
+CIP-0124,London Stock Exchange Group (LSEG),2026-09-22,10.0,0.0,fully escrowed,0,0,0,,True,False,False
+CIP-0126,Marex,2026-09-25,10.0,0.0,fully escrowed,0,0,0,,True,False,False
+CIP-0058,IntellectEU,2025-04-25,0.0,1.0,fully earned,2,2,2,2025-07-24,False,False,False
+CIP-0052,Monstera FZE (Witan Group subsidiary),2025-05-13,0.0,0.0,removed,1,1,1,2025-11-09,False,False,False
+CIP-0053,AngelHack,2025-05-19,0.0,2.5,fully earned,7,5,5,2025-11-15,False,False,False
+CIP-0063,Kaiko,2025-05-28,0.0,6.5,fully earned,5,3,3,2025-11-24,False,False,False
+CIP-0061,Chainlink (Chainlink Labs),2025-07-21,0.0,7.5,fully earned,5,3,3,2026-01-17,False,False,False
+CIP-0072,Fireblocks,2025-08-11,0.0,2.58,fully earned,3,2,2,2026-02-07,False,False,False
+CIP-0076,Hypernative,2025-09-09,0.0,1.0,fully earned,1,1,1,2026-03-08,False,False,False
+CIP-0059,Woodside AI,2025-05-09 (reset 2025-08-13),0.0,0.0,removed,6,4,4,2026-08-13,False,False,False
+CIP-0093,Bosphorus SV (BSV),2025-11-24,6.0,0.0,fully escrowed,2,2,0,2027-05-24,False,False,False
+CIP-0115,Societe Generale,2026-04-27,8.0,0.0,fully escrowed,5,5,0,2027-07-27,False,False,False
+CIP-0122,TreasurySpring Management (Jersey) Limited,2026-09-09,4.0,0.0,fully escrowed,6,6,0,2027-09-09,False,False,False
+CIP-0118,Franklin Templeton,2026-06-10,4.0,1.0,partly earned,3,3,0,2027-12-10,False,False,False
+CIP-0102,"Tharimmune, Inc.",2026-01-21,7.125,7.875,partly earned,2,2,0,2028-04-21,False,False,False
