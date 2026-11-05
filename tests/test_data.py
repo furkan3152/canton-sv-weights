@@ -75,10 +75,26 @@ class Dilution(unittest.TestCase):
             self.assertLessEqual(float(r["ghost_cc_per_year"]),
                                  float(r["sv_tranche_cc_per_year"]) + 1)
 
-    def test_cumulative_bounds_are_ordered(self):
-        for r in rows("dilution.csv"):
-            self.assertLessEqual(float(r["ghost_cc_cumulative_low"]),
-                                 float(r["ghost_cc_cumulative_high"]))
+    def test_cumulative_never_decreases(self):
+        values = [float(r["ghost_cc_cumulative"]) for r in rows("dilution.csv")]
+        self.assertEqual(values, sorted(values))
+
+
+class OnchainCheck(unittest.TestCase):
+    def test_model_tranche_matches_onchain_issuance(self):
+        # issuancePerSvRewardCoupon is per basis point of weight, per round.
+        rounds = json.loads((DATA / "lighthouse" / "rounds.json").read_text())["rounds"]
+        latest = max(rounds, key=lambda r: r["round"])
+        last = rows("snapshots.csv")[-1]
+        per_year = latest["issuance_per_sv_reward_coupon"] * float(last["total"]) * 10_000 * 365 * 144
+        model = float(rows("dilution.csv")[-1]["sv_tranche_cc_per_year"])
+        self.assertAlmostEqual(per_year / model, 1.0, delta=1e-6)
+
+    def test_milestone_mints_are_close_to_the_model(self):
+        ratios = [float(r["ratio"]) for r in rows("mints.csv") if r["comparable"] == "True"]
+        self.assertGreaterEqual(len(ratios), 15)
+        for ratio in ratios:
+            self.assertTrue(0.7 < ratio < 1.15, ratio)
 
 
 if __name__ == "__main__":
