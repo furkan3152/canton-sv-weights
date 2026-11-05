@@ -18,7 +18,7 @@ pip install matplotlib
 
 `run.sh` rebuilds every table and figure and then runs the consistency tests
 in `tests/`. `src/fetch_lighthouse.sh` refreshes the on-chain snapshots in
-`data/lighthouse/`.
+`data/lighthouse/`, including the round samples (`src/fetch_rounds.py`).
 
 | Step | Script | Output |
 |---|---|---|
@@ -39,12 +39,13 @@ in `tests/`. `src/fetch_lighthouse.sh` refreshes the on-chain snapshots in
 | `data/grants.csv` | One row per milestone-based CIP grant |
 | `data/events.csv` | Every change of a grant's escrowed or active weight |
 | `data/cip_milestones.json` | Milestone deadlines extracted from the CIP texts |
+| `data/milestone_weights.json` | Maximum weight of each dated milestone, read by hand from the CIP texts |
 | `data/deadlines.csv` | Escrowed weight compared with those deadlines |
 | `data/dilution.csv` | CC per year for one unit of weight, and the escrowed share |
 | `data/mint_votes.csv` | Every on-chain vote to mint from the unclaimed pool |
 | `data/mints.csv` | Approved milestone mints per grant, against the model |
 | `data/weight_votes.csv` | Every executed weight vote, matched with the config commit |
 | `data/onchain/` | Live DSO state used to check node totals and read the issuance curve |
-| `data/lighthouse/` | Vote requests and rounds as indexed by Lighthouse, with the fetch time |
+| `data/lighthouse/` | Vote requests and rounds as indexed by Lighthouse, with the fetch time; `round_samples.csv` holds every 500th round's opening time and paid SV issuance |
 
 See "Method and limits" in the article before relying on any number.
