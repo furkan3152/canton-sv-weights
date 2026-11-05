@@ -1,39 +1,39 @@
 cip,organisation,first_seen,peak_total,peak_escrow,escrow_now,active_now,escrow_granted,earned_from_escrow,earned_direct,released_unearned,removed,enforced,restored,status
-CIP-0052,Monstera FZE,2025-08-15,5.0,5.0,0.0,0.0,5.0,0.0,0.0,0.0,5.0,0.0,0.0,removed
+CIP-0052,Monstera FZE (Witan Group subsidiary),2025-08-15,5.0,5.0,0.0,0.0,5.0,0.0,0.0,0.0,5.0,0.0,0.0,removed
 CIP-0053,AngelHack,2025-06-11,2.5,2.5,0.0,2.5,2.5,2.5,0.0,0.0,0.0,0.0,0.0,fully earned
 CIP-0058,IntellectEU,2025-06-03,1.0,1.0,0.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,fully earned
 CIP-0059,Woodside AI,2025-08-15,10.0,10.0,0.0,0.0,10.0,0.0,0.0,0.0,10.0,0.0,0.0,removed
 CIP-0060,Zero Hash,2025-08-15,7.5,7.5,4.0,3.5,7.5,3.5,0.0,0.0,0.0,0.0,0.0,partly earned
-CIP-0061,Chainlink,2025-10-02,7.5,7.5,0.0,7.5,7.5,7.5,0.0,0.0,0.0,0.0,0.0,fully earned
+CIP-0061,Chainlink (Chainlink Labs),2025-10-02,7.5,7.5,0.0,7.5,7.5,7.5,0.0,0.0,0.0,0.0,0.0,fully earned
 CIP-0063,Kaiko,2025-06-19,6.5,6.5,0.0,6.5,6.5,6.5,0.0,0.0,0.0,0.0,0.0,fully earned
-CIP-0065,Chainlink; Layer Zero; Wormhole,2025-10-02,9.0,9.0,4.5,4.1,9.0,4.1,0.0,0.4,0.0,0.0,0.0,partly earned
+CIP-0065,"LayerZero Labs, Wormhole Labs, Chainlink (three applicants)",2025-10-02,9.0,9.0,4.5,4.1,9.0,4.1,0.0,0.4,0.0,0.0,0.0,partly earned
 CIP-0069,Ledger,2025-10-02,5.0,5.0,3.0,2.0,5.0,2.0,0.0,0.0,0.0,2.0,2.0,partly earned
-CIP-0071,Ubyx,2025-08-24,5.0,5.0,1.5,3.45,5.0,3.45,0.0,0.0,0.05,0.0,0.0,partly earned
-CIP-0072,Fireblocks,2025-10-12,5.0,5.0,0.0,2.58,5.0,2.58,0.0,2.42,0.0,0.0,0.0,fully earned
+CIP-0071,Ubyx,2025-08-24,5.0,5.0,1.5,3.45,5.0,3.45,0.0,0.05,0.0,0.0,0.0,partly earned
+CIP-0072,Fireblocks,2025-10-12,5.0,5.0,0.0,2.58,5.0,2.58,0.0,2.42,0.0,0.0,0.0,"closed, partly earned"
 CIP-0074,BitGo,2025-10-12,5.0,5.0,2.0,2.8667,5.0,2.8667,0.0,0.1333,0.0,0.0,0.0,partly earned
-CIP-0075,Zodia,2025-10-26,5.0,5.0,5.0,0.0,5.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
+CIP-0075,Zodia Custody,2025-10-26,5.0,5.0,5.0,0.0,5.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0076,Hypernative,2025-09-23,1.0,1.0,0.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,fully earned
 CIP-0077,Taurus,2025-10-02,5.0,5.0,2.0,1.8,5.0,3.0,0.0,0.0,0.0,2.4,1.2,partly earned
 CIP-0080,Republic,2025-10-26,6.0,6.0,2.0,4.0,6.0,4.0,0.0,0.0,0.0,0.0,0.0,partly earned
 CIP-0081,YZi Labs,2026-03-29,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0083,DTCC,2025-12-25,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
-CIP-0085,Talos,2025-11-05,6.5,6.5,1.0,5.4083,6.5,5.4083,0.0,0.0917,0.0,0.0,0.0,partly earned
+CIP-0085,Talos (Coin Metrics existing SV preserved),2025-11-05,6.5,6.5,1.0,5.4083,6.5,5.4083,0.0,0.0917,0.0,0.0,0.0,partly earned
 CIP-0086,ChainSafe,2026-04-04,3.95,2.0,2.0,1.95,2.0,0.0,1.95,0.0,0.0,0.0,0.0,partly earned
-CIP-0087,HexTrust,2025-12-03,3.0,3.0,2.0,1.0,3.0,1.0,0.0,0.0,0.0,0.0,0.0,partly earned
-CIP-0090,USDT0,2025-12-13,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
+CIP-0087,Hex Trust,2025-12-03,3.0,3.0,2.0,1.0,3.0,1.0,0.0,0.0,0.0,0.0,0.0,partly earned
+CIP-0090,USDT0 issuer (applicant not otherwise named),2025-12-13,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0091,Zenith,2025-11-16,10.0,10.0,6.0,4.0,10.0,4.0,0.0,0.0,0.0,0.0,0.0,partly earned
 CIP-0093,Bosphorus SV (BSV),2026-02-05,6.0,6.0,6.0,0.0,6.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0094,Blockdaemon,2026-01-14,5.0,5.0,4.0,1.0,5.0,1.0,0.0,0.0,0.0,0.0,0.0,partly earned
 CIP-0095,Mesh,2026-02-04,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0097,Nasdaq,2026-02-04,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
-CIP-0102,"Tharimmune, Inc.; Tharimmune, Inc. (Canton Strategic Holdings); Tharimmune/CSH, .5 split https://lists.sync.global/g/tokenomics-announce/message/323 https://github.com/canton-foundation/cips/blob/main/cip-0102/cip-0102.md; Tharimmune/CSH, Inc.",2026-02-02,15.0,15.0,7.125,7.875,15.0,7.875,0.0,0.0,0.0,0.0,0.0,partly earned
-CIP-0106,QCP Group (QCP),2026-03-29,5.0,5.0,4.0,1.0,5.0,1.0,0.0,0.0,0.0,0.0,0.0,partly earned
+CIP-0102,"Tharimmune, Inc.",2026-02-02,15.0,15.0,7.125,7.875,15.0,7.875,0.0,0.0,0.0,0.0,0.0,partly earned
+CIP-0106,QCP Group,2026-03-29,5.0,5.0,4.0,1.0,5.0,1.0,0.0,0.0,0.0,0.0,0.0,partly earned
 CIP-0109,Visa,2026-04-23,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
-CIP-0110,Apollo Global Management (Apollo),2026-05-23,7.0,7.0,7.0,0.0,7.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
-CIP-0113,Further Asset Management (Further),2026-04-23,8.0,8.0,8.0,0.0,8.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
+CIP-0110,Apollo,2026-05-23,7.0,7.0,7.0,0.0,7.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
+CIP-0113,Further Asset Management,2026-04-23,8.0,8.0,8.0,0.0,8.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0115,Societe Generale,2026-05-09,8.0,8.0,8.0,0.0,8.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0118,Franklin Templeton,2026-06-26,5.0,5.0,4.0,1.0,5.0,1.0,0.0,0.0,0.0,0.0,0.0,partly earned
-CIP-0122,Franklin Templeton,2026-09-17,4.0,4.0,4.0,0.0,4.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
-CIP-0123,a16z,2026-10-29,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
+CIP-0122,TreasurySpring Management (Jersey) Limited,2026-09-17,4.0,4.0,4.0,0.0,4.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
+CIP-0123,a16z crypto,2026-10-29,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
 CIP-0124,London Stock Exchange Group (LSEG),2026-10-12,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
-CIP-0126,Blockdaemon/Marex,2026-10-08,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed
+CIP-0126,Marex,2026-10-08,10.0,10.0,10.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0,0.0,fully escrowed

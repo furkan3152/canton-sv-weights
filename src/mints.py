@@ -9,11 +9,12 @@ Inputs:
   data/lighthouse/governance.json  every on-chain VoteRequest, as indexed by
                                    Lighthouse (lighthouse.cantonloop.com)
   data/events.csv                  milestone events from lifecycle.py
-  data/dilution.csv                CC per year for one unit of weight
+  data/dilution.csv                CC per round for one unit of weight
 
 For each grant, the model value is the weight earned at each milestone times
 the CC one unit of weight earned between the grant's first escrow and that
-milestone. It assumes the SV node collected every round.
+milestone, summed over the rounds in between. It assumes the SV node collected
+every round.
 
 Writes data/mint_votes.csv (every such vote) and data/mints.csv (per grant).
 """
@@ -25,12 +26,14 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
+from rounds import round_at, samples
+
 ROOT = Path(__file__).resolve().parent.parent
 # Grants whose mints do not follow the escrow-release pattern, so the model
 # does not apply: CIP-0102/CIP-0114 weight is earned under the CIP-0114
 # programme, and the CIP-0115 mints were made without releasing escrow.
 NOT_COMPARABLE = {"CIP-0102", "CIP-0114", "CIP-0115"}
-YEAR_SECONDS = 365 * 24 * 3600
+POINTS = samples()
 CIP_RE = re.compile(r"CIPs?[- ]?0*(\d{2,3})", re.I)
 
 
@@ -39,18 +42,16 @@ def when(text):
 
 
 def per_unit_series():
-    rows = list(csv.DictReader(open(ROOT / "data" / "dilution.csv")))
-    return [(when(r["date"]), float(r["cc_per_weight_unit_per_year"])) for r in rows]
+    """(first round, last round, CC per weight unit per round) for each interval."""
+    rows = csv.DictReader(open(ROOT / "data" / "dilution.csv"))
+    return [(float(r["round_start"]), float(r["round_stop"]),
+             float(r["cc_per_weight_unit_per_round"])) for r in rows]
 
 
 def cc_per_unit_between(series, start, stop):
-    total = 0.0
-    for i, (t, rate) in enumerate(series):
-        t_next = series[i + 1][0] if i + 1 < len(series) else stop
-        lo, hi = max(t, start), min(t_next, stop)
-        if hi > lo:
-            total += rate * (hi - lo).total_seconds() / YEAR_SECONDS
-    return total
+    """CC one unit of weight earned from calendar time start to stop."""
+    r0, r1 = round_at(start, POINTS), round_at(stop, POINTS)
+    return sum(rate * max(0.0, min(b, r1) - max(a, r0)) for a, b, rate in series)
 
 
 def votes():

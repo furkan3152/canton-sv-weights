@@ -16,6 +16,7 @@ one that has escrowed weight, so that the weight is not counted twice.
 """
 
 import csv
+import json
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -55,6 +56,8 @@ def load():
 
 def main():
     rows, snaps = load()
+    cip_names = {c["cip"]: c["organisation"] for c in
+                 json.load(open(ROOT / "data" / "cip_milestones.json"))["cips"]}
     order = [s["commit"] for s in snaps]
     info = {s["commit"]: s for s in snaps}
 
@@ -110,7 +113,9 @@ def main():
                     flows["enforced"] += max(-da, 0.0)
                     flows["restored"] += max(da, 0.0)
                     flows["escrow_granted"] += max(de, 0.0)
-                    flows["removed"] += max(-de, 0.0)
+                    # An alignment that lowers escrow moves a milestone
+                    # remainder to the unassigned pool (Ubyx, #279).
+                    flows["released_unearned"] += max(-de, 0.0)
                 events.append({
                     "cip": f"CIP-{cip}", "date": info[c]["date"][:10], "commit": c,
                     "kind": kind, "escrow_before": round(prev_e, 4),
@@ -130,7 +135,9 @@ def main():
 
         grants.append({
             "cip": f"CIP-{cip}",
-            "organisation": "; ".join(sorted(n for n in names[cip] if n)),
+            # Config comments can be wrong (CIP-0122 is labelled Franklin
+            # Templeton); prefer the organisation named in the CIP itself.
+            "organisation": cip_names.get(f"CIP-{cip}") or "; ".join(sorted(n for n in names[cip] if n)),
             "first_seen": info[first]["date"][:10],
             "peak_total": round(peak_total, 4),
             "peak_escrow": round(peak_escrow, 4),
@@ -140,6 +147,7 @@ def main():
             "status": (
                 "fully escrowed" if a_now < EPS and e_now > EPS
                 else "partly earned" if a_now > EPS and e_now > EPS
+                else "closed, partly earned" if a_now > EPS and flows["released_unearned"] > EPS
                 else "fully earned" if a_now > EPS
                 else "removed"
             ),

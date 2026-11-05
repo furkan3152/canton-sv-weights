@@ -86,15 +86,41 @@ class OnchainCheck(unittest.TestCase):
         rounds = json.loads((DATA / "lighthouse" / "rounds.json").read_text())["rounds"]
         latest = max(rounds, key=lambda r: r["round"])
         last = rows("snapshots.csv")[-1]
-        per_year = latest["issuance_per_sv_reward_coupon"] * float(last["total"]) * 10_000 * 365 * 144
-        model = float(rows("dilution.csv")[-1]["sv_tranche_cc_per_year"])
-        self.assertAlmostEqual(per_year / model, 1.0, delta=1e-6)
+        per_round = latest["issuance_per_sv_reward_coupon"] * float(last["total"]) * 10_000
+        model = float(rows("dilution.csv")[-1]["sv_tranche_cc_per_round"])
+        self.assertAlmostEqual(per_round / model, 1.0, delta=1e-6)
+
+    def test_model_tranche_matches_sampled_rounds(self):
+        # At each sampled round, the paid issuance per coupon times the total
+        # weight is the SV tranche. Allow for samples taken around a weight
+        # change, when the commit date and the on-chain change differ.
+        samples = rows("lighthouse/round_samples.csv")
+        intervals = [(float(r["round_start"]), float(r["round_stop"]), r) for r in rows("dilution.csv")]
+        checked = close = 0
+        for s in samples:
+            n = int(s["round"])
+            iv = next((r for a, b, r in intervals if a <= n < b), None)
+            if iv is None:
+                continue
+            paid = float(s["issuance_per_sv_reward_coupon"]) * float(iv["total_weight"]) * 10_000
+            checked += 1
+            close += abs(paid / float(iv["sv_tranche_cc_per_round"]) - 1) < 0.005
+        self.assertGreater(checked, 180)
+        self.assertGreater(close / checked, 0.8)
+
+    def test_cumulative_matches_the_paid_rate(self):
+        import sys
+        sys.path.insert(0, str(ROOT / "src"))
+        from dilution import paid_rate_cumulative
+        from rounds import samples
+        model = float(rows("dilution.csv")[-1]["ghost_cc_cumulative"])
+        self.assertAlmostEqual(paid_rate_cumulative(samples()) / model, 1.0, delta=0.02)
 
     def test_milestone_mints_are_close_to_the_model(self):
         ratios = [float(r["ratio"]) for r in rows("mints.csv") if r["comparable"] == "True"]
         self.assertGreaterEqual(len(ratios), 15)
         for ratio in ratios:
-            self.assertTrue(0.7 < ratio < 1.15, ratio)
+            self.assertTrue(0.75 < ratio < 1.05, ratio)
 
 
 if __name__ == "__main__":

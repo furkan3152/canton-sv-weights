@@ -8,3 +8,4 @@ for e in governance svs rounds dev-fund; do
   curl -sSf -m 120 "$B/$e" -o "$e.json"
 done
 date -u +%Y-%m-%dT%H:%MZ > fetched-at.txt
+python3 "$(dirname "$0")/fetch_rounds.py"
