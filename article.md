@@ -14,7 +14,7 @@ This piece builds that account from public data. I rebuilt the history of SV wei
 - **Rewards.** That weight has accrued about 1.74 billion CC since June 2025, and adds about 847 million CC per nominal year at today's issuance. The coins wait in the network's unclaimed-reward pool.
 - **Validation.** The method reproduces actual milestone payouts. For 19 paid grants, governance approved 521 million CC; the method gives 540 million.
 - **Outcomes.** Of 260.5 weight placed in escrow, 65.3 has been earned and 15.0 removed. Another 3.1 was released without being earned, and 177.1 is still escrowed.
-- **Deadlines.** Between 30.1 and 49.5 escrowed weight, across 11 grants, is tied to dated milestones that are past their deadline and not yet earned. CIP-0111 asks the Tokenomics Working Group to review exactly this case. So far the only removal of milestone weight on-chain is that of Monstera FZE and Woodside AI, in May 2026.
+- **Deadlines.** Between 28.5 and 49.1 escrowed weight, across 8 grants, is tied to dated milestones that are past their deadline and not yet earned. CIP-0111 asks the Tokenomics Working Group to review exactly this case. So far the only removal of milestone weight on-chain is that of Monstera FZE and Woodside AI, in May 2026.
 - **Record-keeping.** The on-chain pool records only an amount, so the escrow reserve exists only as an off-chain calculation.
 
 ## How SV rewards are paid
@@ -102,7 +102,7 @@ If the method is right, each milestone payout should be close to what the earned
 
 *Figure 3. For each grant, the CC its earned weight accrued in escrow by this method, against the payouts approved on-chain.*
 
-For the 19 grants where the comparison applies, approved payouts total 521 million CC and the method gives 540 million. The ratio per grant runs from 0.82 to 1.00, with a median of 0.96. A small overestimate is expected. The method starts each grant at the config commit, while the TWG starts when an operator confirmed the weight. It also counts every round, including any a node failed to collect.
+For the 19 grants where the comparison applies, approved payouts total 521 million CC and the method gives 540 million. The ratio per grant runs from 0.81 to 1.00, with a median of 0.95. A small overestimate is expected. The method dates each escrow period by config commits, while the TWG uses the times an operator confirmed the weight and the milestone; for Franklin Templeton (0.81), the payout was approved ten days before the config change that released the weight. The method also counts every round, including any a node failed to collect.
 
 Two grants are excluded because they are paid on a different basis. Tharimmune / Canton Strategic Holdings (CIP-0102 and CIP-0114) earns most of its weight under the CIP-0114 programme. Société Générale (CIP-0115) received payouts while its escrow stayed at 8.
 
@@ -110,7 +110,7 @@ The agreement matters because it means the 1.74 billion CC is not a theoretical 
 
 ## What happened to the promised weight
 
-Grouping every beneficiary entry by the CIP cited in its comment gives the history of 38 milestone grants and 84 weight changes, each linked to its commit. The code checks, grant by grant, that every unit placed in escrow is accounted for:
+Grouping every beneficiary entry by the CIP cited in its comment gives the history of 38 milestone grants and 84 weight changes, each linked to its commit. The config comments cite CIP-0102 for the Tharimmune / Canton Strategic Holdings escrow that CIP-0114 later enlarged, so that programme is followed as one grant. The code checks, grant by grant, that every unit placed in escrow is accounted for:
 
 | | Weight |
 |---|---|
@@ -146,12 +146,12 @@ Most CIPs give each milestone a deadline, often "+180 days from CIP approval". M
 
 | Status | Grants | Escrowed weight |
 |---|---|---|
-| Tied to passed, dated milestones not yet earned (low bound) | 11 | 30.1 |
-| Other escrow of grants with a passed deadline | 15 | 50.9 |
+| Tied to passed, dated milestones not yet earned (low bound) | 8 | 28.5 |
+| Other escrow of grants with a passed deadline | 15 | 52.5 |
 | Milestones not published | 7 | 67.0 |
 | No dated deadline has passed yet | 5 | 29.1 |
 
-Several grants that look overdue at first glance are not. Zero Hash, Zenith, Republic, Talos and Taurus met their dated milestones. So did the three CIP-0065 bridges, apart from 0.4 of Wormhole's integration weight. Their remaining escrow belongs to milestones with no fixed date, and CIP-0099 also extended Zero Hash's adoption period. The largest amounts tied to passed, dated milestones are:
+Several grants that look overdue at first glance are not. Zero Hash, Zenith, Republic, Talos, Taurus, BitGo, ChainSafe and the three CIP-0065 bridges have resolved their dated milestones: the weight was earned, or the unearned rest was released from escrow when the milestone was assessed. Their remaining escrow belongs to milestones with no fixed date, and CIP-0099 also extended Zero Hash's adoption period. The largest amounts tied to passed, dated milestones are:
 
 - YZi Labs, 10, whose CIP-0081 programme term ended on 26 September 2026;
 - Mesh, 4;
@@ -159,9 +159,9 @@ Several grants that look overdue at first glance are not. Zero Hash, Zenith, Rep
 - the USDT0 issuer, 3;
 - Zodia Custody, 3.
 
-Part of this is acceleration bonus weight. Several CIPs pay a bonus on a sliding scale that falls to zero at the deadline (Zodia, Mesh, the USDT0 issuer, ChainSafe, Ledger), so once the deadline has passed, that part of the escrow can no longer be earned.
+Part of this is acceleration bonus weight. Several CIPs pay a bonus on a sliding scale that falls to zero at the deadline (Zodia, Mesh, the USDT0 issuer, Ledger), so once the deadline has passed, that part of the escrow can no longer be earned.
 
-These bounds depend on reading milestone weights from free text, and a few grants are irregular; ChainSafe's escrow, for example, was set below its CIP maximum. The full per-grant table is in `data/deadlines.csv`.
+These bounds depend on reading milestone weights from free text, and a few grants are irregular. ChainSafe's escrow, for example, was set at 2 rather than its CIP maximum of 5 once its first milestones were assessed ("1.95 out of 3"), so weight that never entered escrow is not counted. The full per-grant table is in `data/deadlines.csv`.
 
 A passed deadline does not forfeit the weight. CIP-0111 says that "At a minimum, the TWG must review SVs for potential weight reduction whenever the deadline for a milestone associated with a milestone-based SV CIP passes." A reduction then needs a TWG recommendation, an off-chain SV vote and an on-chain vote. Deadlines can be extended, as CIP-0099 did for Zero Hash, and the TWG once reset Woodside's approval date.
 

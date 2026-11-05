@@ -68,7 +68,7 @@ def main():
     ax.set_title("Where the escrowed Super Validator weight stands", loc="left")
     ax.set_xlim(0, 100)
     ax.spines[["top", "right"]].set_visible(False)
-    fig.text(0.01, 0.01, "First row: the low bound, assuming weight earned so far came from the "
+    fig.text(0.01, 0.01, "First row: the low bound, assuming weight already earned or released resolved the "
              "dated milestones first. Deadlines and milestone weights from the CIP texts at "
              "canton-foundation/cips 92df641.",
              fontsize=6.5, color="#666")

@@ -111,7 +111,7 @@ def main():
     modeled = defaultdict(float)
     earned = defaultdict(float)
     for e in events:
-        t = when(e["date"] + "T00:00:00+00:00")
+        t = when(e["timestamp"])
         if e["kind"] == "grant":
             start[e["cip"]] = t
         if e["kind"] != "milestone":

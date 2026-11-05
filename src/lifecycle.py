@@ -27,6 +27,10 @@ EPS = 1e-9
 
 FLOWS = ("escrow_granted", "earned_from_escrow", "earned_direct",
          "released_unearned", "removed", "enforced", "restored")
+# The config comments cite CIP-0102 for the Tharimmune / Canton Strategic
+# Holdings escrow that CIP-0114 later raised from 4 to 15 (00c8f39), so both
+# CIPs are followed as one programme row under CIP-0102.
+MERGED = {"0102": "Tharimmune / Canton Strategic Holdings (CIP-0102 and CIP-0114)"}
 ENFORCEMENT = re.compile(r"CIP-?0105", re.I)
 ALIGNMENT = re.compile(r"align public extraBeneficiaries", re.I)
 
@@ -34,7 +38,9 @@ ALIGNMENT = re.compile(r"align public extraBeneficiaries", re.I)
 def classify(de, da, before, subject):
     """Name one change of a grant's escrowed (de) and active (da) weight."""
     if ALIGNMENT.search(subject):
-        return "alignment"
+        # An alignment that only removes active weight mirrors a CIP-0105
+        # enforcement already applied on-chain (Ledger, #358).
+        return "alignment" if abs(de) > EPS or da > EPS else "enforcement"
     if ENFORCEMENT.search(subject) and abs(de) < EPS:
         return "enforcement"  # CIP-0105 lock enforcement or its reversal
     if de < -EPS and da > EPS:
@@ -117,7 +123,8 @@ def main():
                     # remainder to the unassigned pool (Ubyx, #279).
                     flows["released_unearned"] += max(-de, 0.0)
                 events.append({
-                    "cip": f"CIP-{cip}", "date": info[c]["date"][:10], "commit": c,
+                    "cip": f"CIP-{cip}", "date": info[c]["date"][:10],
+                    "timestamp": info[c]["date"], "commit": c,
                     "kind": kind, "escrow_before": round(prev_e, 4),
                     "escrow_after": round(e, 4), "active_before": round(prev_a, 4),
                     "active_after": round(a, 4), "subject": info[c]["subject"],
@@ -137,7 +144,8 @@ def main():
             "cip": f"CIP-{cip}",
             # Config comments can be wrong (CIP-0122 is labelled Franklin
             # Templeton); prefer the organisation named in the CIP itself.
-            "organisation": cip_names.get(f"CIP-{cip}") or "; ".join(sorted(n for n in names[cip] if n)),
+            "organisation": MERGED.get(cip) or cip_names.get(f"CIP-{cip}")
+            or "; ".join(sorted(n for n in names[cip] if n)),
             "first_seen": info[first]["date"][:10],
             "peak_total": round(peak_total, 4),
             "peak_escrow": round(peak_escrow, 4),

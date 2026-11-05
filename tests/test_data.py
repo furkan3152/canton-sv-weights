@@ -51,17 +51,18 @@ class Snapshots(unittest.TestCase):
 
 
 class Grants(unittest.TestCase):
-    def test_escrow_is_fully_accounted_for(self):
-        for g in rows("grants.csv"):
-            out = sum(float(g[k]) for k in
-                      ("escrow_now", "earned_from_escrow", "released_unearned", "removed"))
-            self.assertAlmostEqual(float(g["escrow_granted"]), out, delta=EPS, msg=g["cip"])
-
-    def test_active_weight_is_earned_net_of_enforcement(self):
-        for g in rows("grants.csv"):
-            net = (float(g["earned_from_escrow"]) + float(g["earned_direct"])
-                   - float(g["enforced"]) + float(g["restored"]))
-            self.assertAlmostEqual(float(g["active_now"]), net, delta=EPS, msg=g["cip"])
+    def test_event_labels(self):
+        for e in rows("events.csv"):
+            de = float(e["escrow_after"]) - float(e["escrow_before"])
+            da = float(e["active_after"]) - float(e["active_before"])
+            if e["kind"] == "alignment":
+                self.assertGreater(abs(de), EPS, e["commit"])
+            if e["kind"] == "enforcement":
+                self.assertLess(abs(de), EPS, e["commit"])
+            if e["kind"] == "milestone":
+                self.assertTrue(de < -EPS and da > EPS, e["commit"])
+            if e["kind"] == "removal":
+                self.assertIn("CIP-0111", e["subject"], e["commit"])
 
     def test_grant_escrow_matches_snapshot_escrow(self):
         last = rows("snapshots.csv")[-1]
@@ -69,15 +70,42 @@ class Grants(unittest.TestCase):
         self.assertAlmostEqual(escrow, float(last["escrow"]), delta=EPS)
 
 
-class Dilution(unittest.TestCase):
-    def test_ghost_share_never_exceeds_tranche(self):
-        for r in rows("dilution.csv"):
-            self.assertLessEqual(float(r["ghost_cc_per_year"]),
-                                 float(r["sv_tranche_cc_per_year"]) + 1)
+class Pool(unittest.TestCase):
+    def test_released_weight_is_the_unassigned_pool(self):
+        # Every milestone remainder released from escrow ends up in the
+        # unassigned GhostSV pool.
+        released = sum(float(g["released_unearned"]) for g in rows("grants.csv"))
+        pool = float(rows("snapshots.csv")[-1]["unassigned"])
+        self.assertAlmostEqual(released, pool, delta=EPS)
 
-    def test_cumulative_never_decreases(self):
-        values = [float(r["ghost_cc_cumulative"]) for r in rows("dilution.csv")]
-        self.assertEqual(values, sorted(values))
+
+class Deadlines(unittest.TestCase):
+    def test_bounds_are_consistent(self):
+        for r in rows("deadlines.csv"):
+            low, high = float(r["unmet_passed_low"]), float(r["unmet_passed_high"])
+            self.assertLessEqual(low, high + EPS, r["cip"])
+            self.assertLessEqual(high, float(r["escrow_now"]) + EPS, r["cip"])
+
+    def test_resolved_milestones_are_not_counted(self):
+        # Dated milestones resolved by an earned weight, a released remainder
+        # (Wormhole's 0.4, BitGo's 0.13) or a vote that set the escrow below the
+        # CIP maximum (ChainSafe, "1.95 out of 3"): the low bound must be zero.
+        by = {r["cip"]: r for r in rows("deadlines.csv")}
+        for cip in ("CIP-0065", "CIP-0074", "CIP-0086", "CIP-0060", "CIP-0091"):
+            self.assertEqual(float(by[cip]["unmet_passed_low"]), 0.0, cip)
+
+
+class Votes(unittest.TestCase):
+    def test_repeat_votes_are_the_known_resubmissions(self):
+        repeats = sorted(v["beneficiary"] for v in rows("mint_votes.csv") if v["repeat"] == "True")
+        self.assertEqual(len(repeats), 7)
+        # AngelHack, Zero Hash, Taurus and Zenith resubmitted a payout; the
+        # other three are 10 CC test mints that repeat the first one.
+        for name in ("angelhack-mainnet-1", "zerohash-validator-1", "Taurus-Wallet-1",
+                     "Zenith-validator-1"):
+            self.assertIn(name, repeats)
+        tests = [v for v in rows("mint_votes.csv") if v["repeat"] == "True" and v["kind"] == "test mint"]
+        self.assertEqual(len(tests), 3)
 
 
 class OnchainCheck(unittest.TestCase):

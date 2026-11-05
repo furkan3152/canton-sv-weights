@@ -12,8 +12,11 @@ vote before any reduction. It only marks grants that are due for that review.
 
 A passed date alone says nothing about whether the milestone was met, so the
 script also bounds the escrow tied to passed, dated milestones that have not
-been earned. The low bound assumes the weight earned so far came from those
-milestones first; the high bound assumes it came from undated milestones.
+been earned. Weight already earned, or released from escrow without being
+earned, is resolved; weight that never entered escrow (escrow set below the
+CIP maximum) is not escrowed. The low bound assumes the resolved weight came
+from the passed milestones first; the high bound assumes it came from
+undated milestones.
 
 Writes data/deadlines.csv.
 """
@@ -41,6 +44,15 @@ def main(as_of=date(2026, 11, 1)):
         passed = [m for m in dated if date.fromisoformat(m["absolute_due_date"]) < as_of]
         escrow = float(g["escrow_now"])
         earned = float(g["earned_from_escrow"]) + float(g["earned_direct"])
+        released = float(g["released_unearned"])
+        # Weight of passed milestones is resolved when it was earned, or when
+        # the unearned rest was released from escrow at the milestone.
+        resolved = earned + released
+        # Weight that never entered escrow (the escrow was set below the
+        # CIP maximum) cannot be escrowed weight now.
+        cap = c.get("max_total_weight")
+        never_escrowed = (max(0.0, float(cap) - float(g["escrow_granted"]) - float(g["earned_direct"]))
+                          if isinstance(cap, (int, float)) else 0.0)
         passed_weight = sum(weights.get(cip, {}).get(m["id"], 0.0) for m in passed)
         missing = [m["id"] for m in passed if m["id"] not in weights.get(cip, {})]
         assert not (missing and escrow > 0), (cip, missing)
@@ -57,8 +69,10 @@ def main(as_of=date(2026, 11, 1)):
             "last_due_date": max((m["absolute_due_date"] for m in dated), default=""),
             "passed_dated_weight": passed_weight,
             "earned": round(earned, 4),
-            "unmet_passed_low": round(min(escrow, max(0.0, passed_weight - earned)), 4),
-            "unmet_passed_high": round(min(escrow, passed_weight), 4),
+            "released_unearned": round(released, 4),
+            "never_escrowed": round(never_escrowed, 4),
+            "unmet_passed_low": round(min(escrow, max(0.0, passed_weight - resolved - never_escrowed)), 4),
+            "unmet_passed_high": round(min(escrow, max(0.0, passed_weight - released)), 4),
             "extension": extensions.get(cip, ""),
             "timeline_confidential": bool(c.get("milestones_confidential")),
             "review_due": bool(passed) and float(g["escrow_now"]) > 0,
