@@ -1,0 +1,122 @@
+commit,date,subject,nodes,total,active,escrow,unassigned,node
+022bc03,2025-01-22T11:49:22+09:00,Add approved SV IDs and UI settings,10,130.0,0.0,0.0,0.0,130.0
+f14f059,2025-01-29T19:00:09+09:00,Pull recent changes from https://github.com/DACH-NY/cn-svc-configs,10,130.0,0.0,0.0,0.0,130.0
+c0b9068,2025-02-03T23:17:12+09:00,Pull recent changes from https://github.com/DACH-NY/cn-svc-configs,10,131.0,0.0,0.0,0.0,131.0
+6098146,2025-02-06T08:52:59+02:00,chore: CIP-35 add five north weight to gsf sv,10,134.0,0.0,0.0,0.0,134.0
+1be8a66,2025-02-25T18:42:53+09:00,chore: CIP-0039 increase GSF weight to 28 (#10),10,135.0,0.0,0.0,0.0,135.0
+636cc2b,2025-02-26T18:19:46+02:00,chore: CIP-0044 add Elliptic weight to the GSF SV (#13),10,135.5,0.0,0.0,0.0,135.5
+4175b71,2025-03-04T10:11:29+02:00,chore: CIP-0041 add Circle weight to the GSF SV (#15),10,145.5,0.0,0.0,0.0,145.5
+42ec095,2025-03-24T12:33:24+02:00,CIP-0041 remove Circle weight from the GSF SV [allow-total-reward-weight-change] (#21),10,135.5,0.0,0.0,0.0,135.5
+23b592e,2025-03-28T11:53:50-04:00,Feat/add extrabeneficiaries (#24),10,135.5,28.5,0.0,0.0,107.0
+5ffe080,2025-03-28T18:15:25+02:00,chore: add beneficary party IDs for MPCH / LCV / Nima (#27),10,135.5,49.5,0.0,0.0,86.0
+be66c4b,2025-03-31T18:38:42+03:00,Add Obsidian Systems weight to GSF SV [allow-total-reward-weight-change] (#28),10,136.5,50.5,0.0,0.0,86.0
+4c646a1,2025-04-08T16:11:52+03:00,CIP-0046 Add Coin Metrics weight to the GSF SV [allow-total-reward-weight-change] (#29),10,137.5,51.5,0.0,0.0,86.0
+8b000bb,2025-04-11T12:55:32+03:00,Add dedicated LCV SV (#31),11,137.5,51.5,0.0,0.0,86.0
+8a3a1cf,2025-04-15T03:51:20+03:00,CIP-0041 Add Circle weight to the GSF SV (#30),11,147.5,61.5,0.0,0.0,86.0
+2f7e977,2025-04-15T17:46:36-04:00,Add Proof-Group-1 to MainNet (#34),12,147.5,61.5,0.0,0.0,86.0
+77090da,2025-04-15T17:52:23-04:00,add Five North mainnet sv key (#35),13,147.5,61.5,0.0,0.0,86.0
+82e42ee,2025-04-18T12:49:46+03:00,Add weight to C7 SV for referring 2 validators [allow-total-reward-weight-change] (#33),13,147.575,61.5,0.0,0.0,86.075
+78632c6,2025-04-23T20:07:46+03:00,Transfer weight from GSF to Five-North-1 (#38),13,147.575,58.5,0.0,0.0,89.075
+f12fe2c,2025-04-24T16:56:03+03:00,Transfer weight from GSF to Proof-Group-1 (#43),13,147.575,57.5,0.0,0.0,90.075
+8811ed3,2025-04-24T17:18:33+03:00,"Revert ""Transfer weight from GSF to Proof-Group-1 (#43)"" (#44)",13,147.575,58.5,0.0,0.0,89.075
+30f0dae,2025-05-02T16:11:42+09:00,Chore/migrate reward weight mpch to lcv (#42),13,147.575,48.5,0.0,0.0,99.075
+47c075f,2025-05-07T12:13:03+09:00,Transfer weight from GSF to Proof-Group-1 (#47),13,147.575,47.5,0.0,0.0,100.075
+03eb66d,2025-05-12T20:57:17-04:00,increase the weight of DA by 0.925x2=1.85 (#62),13,149.425,47.5,0.0,0.0,101.925
+3f562f6,2025-05-16T18:04:23+03:00,Add Quantstamp weight to GSF SV [allow-total-reward-weight-change] (#64),13,150.425,48.5,0.0,0.0,101.925
+155664a,2025-05-21T16:51:33+09:00,mainnet: Increase weight for SV-Nodeops (#69),13,150.675,48.5,0.0,0.0,102.175
+0cb6525,2025-05-25T13:02:16+03:00,Add weight to C7 SV for referring validator [allow-total-reward-weight-change] (#73),13,151.175,48.5,0.0,0.0,102.675
+ddef518,2025-05-25T13:02:56+03:00,CIP-0055 add Bitwave weight to the GSF SV node [allow-total-reward-weight-change] (#75),13,152.175,49.5,0.0,0.0,102.675
+87be21c,2025-05-28T12:43:56+09:00,increase 5n weight for refering 2 validators [allow-total-reward-weight-change] (#59),13,152.225,49.5,0.0,0.0,102.725
+8324919,2025-06-03T19:07:22+03:00,CIP-0058 Add IntellectEU weight to GSF SV [allow-total-reward-weight-change] (#84),13,153.225,49.5,1.0,0.0,102.725
+005e4bb,2025-06-10T22:28:19+09:00,/chore [allow-total-reward-weight-change] (#104),13,154.45,49.5,1.0,0.0,103.95
+a5d23e9,2025-06-11T11:04:15+03:00,CIP-0053 Add AngelHack weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#94),13,156.95,49.5,3.5,0.0,103.95
+0badab6,2025-06-19T14:06:37+03:00,CIP-0063 Add Kaiko weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#108),13,163.45,49.5,10.0,0.0,103.95
+bc37ad1,2025-06-27T06:58:08+03:00,CIP-0036 Add Kiln weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#114),13,164.45,50.5,10.0,0.0,103.95
+fd43d18,2025-07-15T17:16:38-04:00,CIP-0053 Update AngelHack weight for the completed milestone (#129),13,164.45,51.5,9.0,0.0,103.95
+2aae09e,2025-07-25T10:05:44+09:00,CIP-0054 Add Figment weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#136),13,165.45,52.5,9.0,0.0,103.95
+5f3559c,2025-07-29T20:35:57+00:00,chore[mainnet]: CIP-0032 Update MPCH SV weight to reflect hosted Lukk… (#140),13,166.45,53.5,9.0,0.0,103.95
+0325bf5,2025-07-30T17:21:05+00:00,chore: update extraBeneficiaries for GSF on MainNet (#155),13,166.45,53.5,9.0,0.0,103.95
+0c29138,2025-08-07T04:49:45+00:00,CIP-0063 Update Kaiko weight for the completed milestone (#163),13,166.45,54.5,8.0,0.0,103.95
+76a2950,2025-08-07T09:54:12+00:00,CIP-0043 Add TRM weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#161),13,168.95,57.0,8.0,0.0,103.95
+56c8940,2025-08-07T10:05:23+00:00,CIP-0058 Update IntellectEU weight for completed milestones (#162),13,168.95,58.0,7.0,0.0,103.95
+c7256dc,2025-08-15T16:14:03+00:00,"CIPs-0052-0059-0060 Add Zero Hash, Woodside AI, and Monstera FZE weights to the GSF SV node on MainNet (#167)",13,191.45,58.0,29.5,0.0,103.95
+9bd0a2c,2025-08-15T16:14:45+00:00,"CIP 0063 earned weight increase for 2 completed milestones (as per Tokenomics Meeting Outcomes Aug 13, 2025) (#171)",13,191.45,60.5,27.0,0.0,103.95
+19a99f2,2025-08-22T04:56:20+00:00,Update ProofGroup SV weight [allow-total-reward-weight-change] (#184),13,191.7,60.5,27.0,0.0,104.2
+67a2584,2025-08-24T07:12:53+00:00,CIP-0071 Add Ubyx weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#181),13,196.7,60.5,32.0,0.0,104.2
+04d9ee5,2025-08-26T00:15:20+00:00,cosmetic: Separate 4 digits by underscore for readability (#185),13,196.7,60.5,32.0,0.0,104.2
+9e1f868,2025-09-23T19:57:19+00:00,CIP-0076 Add Hypernative weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#192),13,197.7,60.5,33.0,0.0,104.2
+a8e328e,2025-10-02T02:57:46+00:00,"CIPs-0061-0065-0069-0077 Add Chainlink, Layer Zero, Wormhole, Ledger, and Taurus weights to the GSF SV node on MainNet (#202)",13,224.2,60.5,59.5,0.0,104.2
+7848152,2025-10-03T09:29:59+00:00,"CIP-0063 earned weight increase for the completed milestone (as per Tokenomics Meeting Outcomes October 1, 2025) (#210)",13,224.2,61.0,59.0,0.0,104.2
+f9d803e,2025-10-09T23:06:33+00:00,MainNet: prepare for DA-1 reonboarding (#216),13,224.2,61.0,59.0,0.0,104.2
+b5a5084,2025-10-12T13:26:52+00:00,CIPs-0072-0074 Add Fireblocks and BitGo weights to the GSF SV node on MainNet [allow-total-reward-weight-change] (#214),13,234.2,61.0,69.0,0.0,104.2
+f2a8fc3,2025-10-26T01:07:24+00:00,CIPs-0075-0080 Add Zodia and Republic weights to the GSF SV node on M… (#227),13,245.2,61.0,80.0,0.0,104.2
+bf45ea1,2025-11-05T00:44:23+00:00,[CIP-0085] Add Talos weight to GSF on MainNet [allow-total-reward-weight-change] (#236),13,251.7,61.0,86.5,0.0,104.2
+f608af9,2025-11-08T01:46:23+00:00,MainNet: Redistribute DA weights (#239),13,251.7,61.0,86.5,0.0,104.2
+625c008,2025-11-16T19:22:47+00:00,CIP-0091 Add Zenith weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#246),13,261.7,61.0,96.5,0.0,104.2
+eeeb1ac,2025-11-16T19:23:18+00:00,CIP-0080 Update Republic weight for the completed milestone(s) (#248),13,261.7,64.0,93.5,0.0,104.2
+bc33866,2025-11-16T19:25:20+00:00,CIP-0071 Update Ubyx weight for the completed milestone(s) (#251),13,261.7,66.95,90.55,0.0,104.2
+56720c7,2025-11-16T20:18:20+00:00,"CIP-0085 Talos: earned weight increase for 3 completed milestones (as per Tokenomics Meeting Outcomes Nov 05, 2025 AND Nov 12, 2025) (#249)",13,261.7,69.45,88.05,0.0,104.2
+35c2e4f,2025-11-16T20:27:49+00:00,CIP-0060 Update Zero Hash weight for the completed milestone(s) (#252),13,261.7,72.45,85.05,0.0,104.2
+1a9726d,2025-11-19T05:57:00+00:00,CIP-0069 Update Ledger weight for the completed milestone(s) (#253),13,261.7,74.45,83.05,0.0,104.2
+7dd1590,2025-11-27T20:51:32+00:00,CIP-0053 Update AngelHack weight for the completed milestone(s) (#257),13,261.7,75.95,81.55,0.0,104.2
+11ca98e,2025-12-03T01:42:18+00:00,CIP-0087 Add Hex Trust weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#256),13,264.7,75.95,84.55,0.0,104.2
+dcc5783,2025-12-05T03:46:23+00:00,CIP-0063 Update Kaiko weight for the completed milestone(s) (#260),13,264.7,78.45,82.05,0.0,104.2
+1fdd562,2025-12-13T01:41:39+00:00,CIP-0090 Add USDT0 weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#263),13,274.7,78.45,92.05,0.0,104.2
+fcc467e,2025-12-21T13:29:46+00:00,CIP-0080 Update Republic weight for the completed milestone(s) (#271),13,274.7,78.95,91.55,0.0,104.2
+d9c1338,2025-12-21T13:30:03+00:00,CIP-0077 Update Taurus weight for the completed milestone(s) (#270),13,274.7,81.95,88.55,0.0,104.2
+589bf5c,2025-12-25T00:28:34+00:00,CIP-0083 Add DTCC weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#269),13,284.7,81.95,98.55,0.0,104.2
+5fdfda2,2026-01-12T06:38:20+00:00,CIP-0072 Update Fireblocks weight for the completed milestone(s) (#277),13,284.7,84.03,95.55,0.0,105.12
+b2a98f3,2026-01-12T06:38:51+00:00,CIP-0076 Update Hypernative weight for the completed milestone (#278),13,284.7,85.03,94.55,0.0,105.12
+06f6774,2026-01-12T21:17:14+00:00,chore: align public extraBeneficiaries with the actual GSF configuration (#279),13,284.7,85.03,94.5,1.42,103.75
+3b94508,2026-01-14T07:52:29+00:00,CIP-0094 Add Blockdaemon weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#276),13,289.7,85.03,99.5,1.42,103.75
+a1484a9,2026-02-02T14:08:30+00:00,"CIP-0102 Add Tharimmune, Inc. weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#290)",13,293.7,85.03,103.5,1.42,103.75
+662bfdb,2026-02-04T17:43:07+00:00,CIPs-0095-0097 Add Mesh and Nasdaq weights to the GSF SV node on Main… (#283),13,313.7,85.03,123.5,0.97,104.2
+2ae9ccd,2026-02-05T10:39:13+00:00,CIP-0093 Add Bosphorus weights to the 5N SV node on MainNet (#293),13,316.65,85.03,123.5,0.97,107.15
+89dbac3,2026-02-09T23:04:12+00:00,CIP-0061 Update Chainlink weight for the completed milestone (#296),13,316.65,92.03,116.5,0.97,107.15
+2e3e643,2026-02-09T23:07:34+00:00,CIP-0085 Update Talos weight for the completed milestone (#297),13,316.65,94.9383,113.5,1.0617,107.15
+41f566d,2026-03-13T19:40:18+00:00,CIP-0074 Update BitGo weight for the completed milestone (#300),13,316.65,97.805,110.5,1.195,107.15
+660e17e,2026-03-13T19:40:39+00:00,CIP-0091 Update Zenith weight for the completed milestone (#299),13,316.65,98.805,109.5,1.195,107.15
+12a282c,2026-03-24T17:43:03+00:00,Update Zero Hash and Ubyx weights for completed milestones (#308),13,316.65,99.805,108.5,1.195,107.15
+ee5d225,2026-03-29T02:25:46+00:00,CIP-0081 Add YZi Labs weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#307),13,326.65,99.805,118.5,1.195,107.15
+f968e68,2026-03-29T02:27:35+00:00,CIP-0106 Add QCP Group weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#304),13,325.65,99.805,118.5,1.195,106.15
+0b86207,2026-04-04T06:19:38+00:00,CIP-0086 Add ChainSafe weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#324),13,322.65,99.805,118.5,1.195,103.15
+b94ee3f,2026-04-11T05:18:35+00:00,correct weight field for extraBeneficiaries of 5n (#328),13,336.7,99.805,131.5,1.195,104.2
+abdcca5,2026-04-23T12:46:06+00:00,Add to extraBeneficiaries split for MPCH and Lukka locking wallets to the MPCH SV node on MainNet (#337),13,336.7,99.805,131.5,1.195,104.2
+8b26b1e,2026-04-23T14:42:33+00:00,CIP-0109 Add Visa weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#336),13,346.7,99.805,141.5,1.195,104.2
+59d47a5,2026-04-23T14:43:33+00:00,CIP-0113 Add Further weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#331),13,354.7,99.805,149.5,1.195,104.2
+df32b97,2026-05-02T03:59:00+00:00,CIP-0086 Add Chainsafe weight for the completed milestone(s) on MainNet (#342),13,356.65,101.755,149.5,1.195,104.2
+475e996,2026-05-07T12:38:49+00:00,Update Chainlink minting weight for completed milestone (#357),13,356.65,102.255,149.0,1.195,104.2
+900eacd,2026-05-07T12:39:18+00:00,CIP-0080 Update Republic weight for the completed milestone(s) (#345),13,356.65,102.755,148.5,1.195,104.2
+ef281d7,2026-05-07T12:39:31+00:00,chore: update MPC-Holding-Inc extraBeneficiaries split (#347),13,356.65,102.755,148.5,1.195,104.2
+568fdd0,2026-05-07T12:41:21+00:00,chore: update Liberty-City-Ventures-1 extraBeneficiaries on MainNet (#349),13,356.65,112.755,148.5,1.195,94.2
+6defa4a,2026-05-07T12:43:15+00:00,chore: update Orb-1-LP-1 extraBeneficiaries on MainNet (#356),13,356.65,112.755,148.5,1.195,94.2
+055788e,2026-05-09T15:34:22+00:00,CIP-0115 Add SocieteGenerale weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#355),13,361.75,112.755,156.5,1.195,91.3
+28231e9,2026-05-10T23:21:32+00:00,chore: align public extraBeneficiaries with the actual SV configurati… (#358),13,357.75,120.43,156.5,1.195,79.625
+00c8f39,2026-05-12T00:31:54+00:00,CIP-0114 Add Canton Strategic Holdings/Tharimmune weight for the completed milestone(s) on MainNet [allow-total-reward-weight-change] (#352),13,368.75,120.43,167.5,1.195,79.625
+d362ee5,2026-05-17T01:22:28+00:00,CIP-0111 Remove Monstera FZE and Woodside AI weights from the GSF SV node on MainNet [allow-total-reward-weight-change] (#361),13,353.75,120.43,152.5,1.195,79.625
+9fb63a2,2026-05-23T01:13:04+00:00,CIP-0110 Add Apollo weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#364),13,360.75,120.43,159.5,1.195,79.625
+bfcdfab,2026-05-27T23:05:48+00:00,Add to extraBeneficiaries split .5 for Tharimmune/CSH under MPCH (#366),13,360.75,120.93,159.0,1.195,79.625
+a9db9f1,2026-06-04T22:34:01+00:00,Restore Tradeweb-Markets-1 full reward weight [allow-total-reward-weight-change] (#368),13,364.75,120.93,159.0,1.195,83.625
+f51d62d,2026-06-09T11:41:39+00:00,CIP0105: revert SV weight enforcements for Elliptic and Ledger [allow… (#367),13,367.25,123.43,159.0,1.195,83.625
+ad7f304,2026-06-10T12:05:04+00:00,chore: update Orb-1-LP-1 extraBeneficiaries on MainNet (#370),13,367.25,123.43,159.0,1.195,83.625
+31f441e,2026-06-10T12:05:07+00:00,chore: update MPC-Holding-Inc extraBeneficiaries on MainNet (#369),13,367.25,124.43,158.0,1.195,83.625
+b0abf32,2026-06-17T16:22:01+00:00,CIP-0072 Update Fireblocks weight for the completed milestone(s) (#372),13,367.25,124.93,156.0,2.695,83.625
+0fd9816,2026-06-26T01:24:09+00:00,CIP-0118 Add Franklin Templeton weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#373),13,372.25,124.93,161.0,2.695,83.625
+27a7166,2026-07-10T10:40:19+00:00,chore: update Fivenorth extraBeneficiaries on MainNet (#375),13,372.25,125.93,160.0,2.695,83.625
+85a2922,2026-07-10T11:05:51+00:00,Update Chainlink (CIP-0065) minting weight for completed milestone (#376),13,372.25,127.43,158.5,2.695,83.625
+c13da41,2026-08-11T01:36:27+00:00,Update Blockdaemon in MPC-Holding-Inc extraBeneficiaries on MainNet (#384),13,372.25,128.43,157.5,2.695,83.625
+def2310,2026-08-11T01:38:58+00:00,Update Tharimmune/CantonStrategicHoldings in MPC-Holding-Inc extraBeneficiaries on MainNet (#387),13,372.25,134.43,151.5,2.695,83.625
+b72683d,2026-08-11T01:40:28+00:00,Update Lukka in MPC-Holding-Inc extraBeneficiaries on MainNet (#388),13,372.25,134.43,151.5,2.695,83.625
+5711d2d,2026-09-17T17:08:33+00:00,"CIP-0065 Layer Zero: earned weight increase for a completed milestone (as per Tokenomics Meeting Outcomes July 22, 2026) (#389)",13,372.25,135.93,150.0,2.695,83.625
+5b82732,2026-09-17T17:09:08+00:00,CIP-0091 Update Zenith weight for the completed milestone(s) (#390),13,372.25,138.93,147.0,2.695,83.625
+74bf6c9,2026-09-17T17:09:39+00:00,CIP-0118 Update Franklin Templeton weight for the completed milestone(s) (#391),13,372.25,139.93,146.0,2.695,83.625
+3b70a9c,2026-09-17T17:27:02+00:00,"CIP-0065 Wormhole: earned weight increase for a completed milestone (as per Tokenomics Meeting Outcomes Sep 2, 2026) (#392)",13,372.25,141.03,144.5,3.095,83.625
+4666b43,2026-09-17T17:51:36+00:00,CIP-0105: SV weight enforcements for Quantstamp and Taurus [allow-total-reward-weight-change] (#393),13,370.65,139.43,144.5,3.095,83.625
+8d99993,2026-09-17T18:55:40+00:00,chore: align public extraBeneficiaries with the actual GSF SV configuration (#395),13,370.65,139.43,144.5,3.095,83.625
+014ceda,2026-09-17T18:56:44+00:00,CIP-0122 Add Treasury Spring weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#394),13,374.65,139.43,148.5,3.095,83.625
+bdfd971,2026-09-28T09:04:00+00:00,CIP-0105: revert SV weight enforcements for Quantstamp and Taurus [allow-total-reward-weight-change] (#399),13,376.25,141.03,148.5,3.095,83.625
+ce3f198,2026-10-08T20:08:24+00:00,CIP-0126 Add Marex weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#402),13,386.25,141.03,158.5,3.095,83.625
+8e361fe,2026-10-12T09:32:00+00:00,CIP-0124 Add LSEG weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#406),13,396.25,141.03,168.5,3.095,83.625
+bca029c,2026-10-29T00:17:19+00:00,CIP-0123 Add a16z weight to the MPC-Holding-Inc SV node on DevNet [allow-total-reward-weight-change] (#409),13,406.25,141.03,178.5,3.095,83.625
+25cd117,2026-10-29T11:46:03+00:00,"chore: update Tharimmune-ghost-1 and CantonStrategicHoldings-SVrewards-1 weights in MPC-Holding-Inc extraBeneficiaries on DevNet, TestNet and MainNet (#408)",13,406.25,142.405,177.125,3.095,83.625
+4b5dccb,2026-11-01T00:53:15+00:00,CIP-0105: SV weight enforcements for DFNS and Taurus [allow-total-reward-weight-change] (#411),13,404.45,140.605,177.125,3.095,83.625
