@@ -2,18 +2,20 @@
 
 *Furkan Akdoğan, November 2026. Code and data: [github.com/furkan3152/canton-sv-weights](https://github.com/furkan3152/canton-sv-weights). Weights are as of the config commit of 1 November 2026; on-chain data is as of 5 November 2026.*
 
-Almost half of the reward weight on Canton's Super Validator layer does not belong to an operating Super Validator. It belongs to organisations that have been promised weight in return for future milestones, and until they deliver, the rewards attached to that weight are set aside and not minted. The design is deliberate and documented in the CIPs. What I could not find anywhere is a full account of it: how much weight is in escrow, how much CC it has accrued, how much has been paid out, and how much is overdue for review.
+The Global Synchronizer, the shared infrastructure that connects applications on the Canton Network, is run by a group of Super Validators (SVs). Every round, new Canton Coin (CC) is minted according to a fixed issuance curve and split between validators, application providers and SVs. How the SV portion is divided depends on each SV's reward weight, which SV governance approves through Canton Improvement Proposals (CIPs).
 
-This piece builds that account from public data. I rebuilt the history of SV weight from every commit of the Canton Foundation's config repository. I traced the reward path through the Splice code and priced the escrowed share round by round. Then I checked the result against the on-chain votes that pay milestone rewards.
+Almost half of that reward weight today does not belong to an operating Super Validator. It belongs to organisations that have been promised weight in return for future milestones. Until they deliver, the rewards attached to that weight are set aside and not minted. The design is deliberate and documented in the CIPs. What I could not find anywhere is a full account of it: how much weight is in escrow, how much CC it has accrued, how much has been paid out, and how much is overdue for review.
+
+This piece builds that account from public data. I rebuilt the history of SV weight from every commit of the Canton Foundation's config repository, traced the reward path through the Splice code, and priced the escrowed share round by round. Then I checked the result against the on-chain votes that pay milestone rewards. That such an account can be built at all from public sources says a good deal about how openly Canton's governance runs: the weights, the CIPs and the votes are all on the record.
 
 ## Key findings
 
-- Total SV reward weight grew from 130 in January 2025 to 404.45 in November 2026. Of that, 177.125 sits on 32 escrow ("ghost") parties and 3.095 in an unassigned pool: 44.6% of all weight.
-- That weight receives SV reward coupons every round, but they are never claimed. They expire into the network's unclaimed-reward pool. Since escrow began in June 2025, this comes to about 1.74 billion CC. At today's issuance it adds about 847 million CC per nominal year.
-- The calculation matches how milestones are actually paid. For the 19 grants that have been paid, governance approved 521 million CC against the 540 million this method computes for them.
-- Of 260.5 weight ever placed in escrow, 65.3 has been earned, 15.0 removed and 3.1 released without being earned. The remaining 177.1 is still escrowed.
-- Between 29.6 and 49.0 escrowed weight, across 11 grants, is tied to dated milestones whose deadlines have passed and which have not been earned. CIP-0111 requires the Tokenomics Working Group to review exactly this case. Since CIP-0111 was approved, only one removal of milestone weight has reached the chain: Monstera FZE and Woodside AI, in May 2026.
-- The unclaimed pool on-chain records only an amount. It cannot distinguish escrowed rewards from any other unclaimed reward, so the escrow reserve exists only as an off-chain calculation.
+- **Size.** 180.22 of the network's 404.45 SV reward weight (44.6%) is escrowed or unassigned.
+- **Rewards.** That weight has accrued about 1.74 billion CC since June 2025, and adds about 847 million CC per nominal year at today's issuance. The coins wait in the network's unclaimed-reward pool.
+- **Validation.** The method reproduces actual milestone payouts. For 19 paid grants, governance approved 521 million CC; the method gives 540 million.
+- **Outcomes.** Of 260.5 weight placed in escrow, 65.3 has been earned and 15.0 removed. Another 3.1 was released without being earned, and 177.1 is still escrowed.
+- **Deadlines.** Between 29.6 and 49.0 escrowed weight, across 11 grants, is tied to dated milestones that are past their deadline and not yet earned. CIP-0111 asks the Tokenomics Working Group to review exactly this case. So far the only removal of milestone weight on-chain is that of Monstera FZE and Woodside AI, in May 2026.
+- **Record-keeping.** The on-chain pool records only an amount, so the escrow reserve exists only as an off-chain calculation.
 
 ## How SV rewards are paid
 
@@ -29,6 +31,7 @@ Every unit of weight therefore earns the same amount, and every unit added dilut
 Issuance follows rounds rather than the calendar. The issuance curve advances one tick per round, "independently of how real world time advances", as a comment in `AmuletRules.daml` puts it. Rounds have averaged about 10.3 minutes since June 2025, so a calendar year has held about 3% fewer rounds than a nominal one. For that reason all totals here are summed round by round.
 
 To check the formula over the whole history, I sampled every 500th round since launch. At each sample, the rate actually paid times the total weight in the config file reproduces the expected tranche:
+
 - 182,648 CC per round before the curve step at round 78,840 (12 January 2026);
 - 38,052 CC after it;
 - 36,149 CC once the Development Fund began taking its share in February 2026.
@@ -61,7 +64,7 @@ GSF hosts 97 of the escrowed weight on 20 parties, MPC Holding 53.125 on 7, and 
 
 The Splice code shows the full path.
 
-Each round, an SV node submits its beneficiary list through `DsoRules_ReceiveSvRewardCoupon`. The contract requires that "Total beneficiary weight matches SV operator weight" and creates one `SvRewardCoupon` for each beneficiary, escrow parties included. The escrow parties never claim theirs. CIP-0066 says that "The GSF specifically disables the final minting action for all escrowed SV parties", and later CIPs say the same of every escrow host. Once the round closes, `DsoRules_ClaimExpiredRewards` expires the coupons and records their value in an `UnclaimedReward` contract, together with any expired validator and app rewards.
+Each round, an SV node submits its beneficiary list through `DsoRules_ReceiveSvRewardCoupon`. The contract requires that "Total beneficiary weight matches SV operator weight" and creates one `SvRewardCoupon` for each beneficiary, escrow parties included. The escrow parties never claim theirs. CIP-0066 says that "The GSF specifically disables the final minting action for all escrowed SV parties", and later CIPs state plainly that "The escrow SV will NOT mint rewards". Once the round closes, `DsoRules_ClaimExpiredRewards` expires the coupons and records their value in an `UnclaimedReward` contract, together with any expired validator and app rewards.
 
 An `UnclaimedReward` has two fields, `dso` and `amount`, and `AmuletRules_MergeUnclaimedRewards` merges many of them into one. From that point nothing on-chain records where a given coin came from.
 
@@ -116,6 +119,7 @@ Grouping every beneficiary entry by the CIP cited in its comment gives the histo
 | Still escrowed | 177.125 |
 
 The 38 grants break down as follows:
+
 - 5 are fully earned;
 - 15 are partly earned;
 - 15 have earned nothing yet;
@@ -146,6 +150,7 @@ Most CIPs give each milestone a deadline, often "+180 days from CIP approval". M
 | No dated deadline has passed yet | 5 | 29.1 |
 
 Several grants that look overdue at first glance are not. Zero Hash, Zenith, Republic, Talos and Taurus met their dated milestones. So did the three CIP-0065 bridges, apart from 0.4 of Wormhole's integration weight. Their remaining escrow belongs to milestones with no fixed date, and CIP-0099 also extended Zero Hash's adoption period. The largest amounts tied to passed, dated milestones are:
+
 - YZi Labs, 10, whose CIP-0081 programme term ended on 26 September 2026;
 - Mesh, 4;
 - Blockdaemon, 4;
@@ -180,6 +185,8 @@ Three smaller issues came up:
 
 ## Suggestions
 
+Every number in this article comes from records the network already publishes. These suggestions would let anyone follow the escrow without rebuilding it from git history.
+
 1. **Publish an escrow ledger.** A single page generated from the config repository and the payout votes would make the whole system legible. For each grant it would list the CIP, escrowed and earned weight, CC accrued, CC paid out and milestone deadlines. The code in this repository already produces it.
 2. **Record CIP-0111 reviews publicly.** A one-line outcome for each review would show that the process is working for the weight tied to passed milestones: met, extended to a date, or reduced.
 3. **Give the unclaimed pool provenance, or implement the burn CIP-0111 calls for.** As long as `UnclaimedReward` holds only an amount, the escrow reserve depends on an off-chain calculation.
@@ -212,3 +219,5 @@ pip install matplotlib
 ```
 
 *Disclosure: I hold no CC and have no commercial relationship with any organisation named in this article.*
+
+*This article and its figures are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); the code is MIT-licensed.*

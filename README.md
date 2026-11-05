@@ -1,10 +1,20 @@
 # canton-sv-weights
 
-The history of Super Validator reward weight on Canton MainNet, rebuilt from the
-public git history of [canton-foundation/configs](https://github.com/canton-foundation/configs),
-and what it means for SV rewards and milestone-based (escrowed) weight.
+An open, reproducible account of Super Validator reward weight on Canton
+MainNet, with a focus on milestone-based (escrowed) weight: how much there is,
+what it has accrued, what has been paid out, and what is due for review.
 
-The write-up is in [article.md](article.md).
+The write-up is [article.md](article.md). In short:
+
+- 180.22 of 404.45 SV reward weight (44.6%) is escrowed or unassigned
+  (config commit of 1 November 2026).
+- It has accrued about 1.74 billion CC since June 2025, summed round by round.
+- The method reproduces the milestone payouts approved on-chain: 521 million
+  CC approved against 540 million computed, over 19 grants.
+
+Every figure is rebuilt from public sources by the scripts below. The tests
+check the results against on-chain state: node weights in `DsoRules`, the
+issuance paid per SV coupon at 241 sampled rounds, and the payout votes.
 
 ## Run
 
@@ -49,3 +59,19 @@ in `tests/`. `src/fetch_lighthouse.sh` refreshes the on-chain snapshots in
 | `data/lighthouse/` | Vote requests and rounds as indexed by Lighthouse, with the fetch time; `round_samples.csv` holds every 500th round's opening time and paid SV issuance |
 
 See "Method and limits" in the article before relying on any number.
+
+## Sources
+
+| Source | Used for | Terms |
+|---|---|---|
+| [canton-foundation/configs](https://github.com/canton-foundation/configs) | SV weights and beneficiaries, every commit | No licence file; the repository is public |
+| [canton-foundation/cips](https://github.com/canton-foundation/cips) | Milestones, deadlines and quotes | CC0-1.0 (per CIP) |
+| [canton-network/splice](https://github.com/canton-network/splice) | Reward formulas and contract behaviour (quoted, not copied) | Apache-2.0 |
+| SV app public API (`/dso`) | Live `DsoRules` and `AmuletRules` in `data/onchain/` | Public endpoint |
+| [Lighthouse](https://lighthouse.cantonloop.com) | Vote requests and round data in `data/lighthouse/` | Third-party indexer; snapshots kept for reproducibility |
+
+## Licence
+
+The code is released under the MIT licence (`LICENSE`). The article and the
+figures are released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Data taken from the sources above remains subject to their terms.
