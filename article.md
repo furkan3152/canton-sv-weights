@@ -53,10 +53,12 @@ On 1 November 2026 the weight was split as follows:
 | Holder | Weight | Share |
 |---|---|---|
 | Kept by the 13 SV nodes (11 organisations) | 83.625 | 20.7% |
-| Passed to active beneficiaries | 140.605 | 34.8% |
+| Assigned to active beneficiary parties | 140.605 | 34.8% |
 | Escrowed on 32 ghost parties | 177.125 | 43.8% |
 | Unassigned pool (`GhostSV-validator-1`) | 3.095 | 0.8% |
 | Total | 404.45 | |
+
+Active beneficiary parties are mostly other organisations that have earned weight, but they also include operators' own staking and wallet parties: C7, Liberty City Ventures and Orb-1 route all of their weight this way.
 
 GSF hosts 97 of the escrowed weight on 20 parties, MPC Holding 53.125 on 7, and Five North 27 on 5. A vote effective on 12 November 2026 adds a further 8 to GSF for Paxos (CIP-0125), which is not yet in these figures. Escrow did not exist before 3 June 2025. It passed a third of all weight in November 2025 and has stayed between 31% and 45% since.
 

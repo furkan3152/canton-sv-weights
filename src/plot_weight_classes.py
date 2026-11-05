@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 CLASSES = [
     ("node", "Kept by the SV node operator", "#4C6A92"),
-    ("active", "Passed to an active beneficiary", "#7FA6C9"),
+    ("active", "Assigned to an active beneficiary party", "#7FA6C9"),
     ("escrow", "Escrowed for a milestone (ghost party)", "#D98C5F"),
     ("unassigned", "Not yet assigned (GhostSV pool)", "#E8C07D"),
 ]
@@ -49,9 +49,9 @@ def main():
     last = rows[-1]
     ghost = float(last["escrow"]) + float(last["unassigned"])
     ax.annotate(
-        f"{float(last['total']):.1f} total\n{ghost / float(last['total']):.0%} escrowed or unassigned",
+        f"{float(last['total']):g} total\n{ghost / float(last['total']):.1%} escrowed or unassigned",
         xy=(dates[-1], float(last["total"])),
-        xytext=(-150, -10),
+        xytext=(-175, -10),
         textcoords="offset points",
         fontsize=9,
     )
