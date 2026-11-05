@@ -71,15 +71,15 @@ b2a98f3,2026-01-12T06:38:51+00:00,CIP-0076 Update Hypernative weight for the com
 3b94508,2026-01-14T07:52:29+00:00,CIP-0094 Add Blockdaemon weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#276),13,289.7,85.03,99.5,1.42,103.75
 a1484a9,2026-02-02T14:08:30+00:00,"CIP-0102 Add Tharimmune, Inc. weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#290)",13,293.7,85.03,103.5,1.42,103.75
 662bfdb,2026-02-04T17:43:07+00:00,CIPs-0095-0097 Add Mesh and Nasdaq weights to the GSF SV node on Main… (#283),13,313.7,85.03,123.5,0.97,104.2
-2ae9ccd,2026-02-05T10:39:13+00:00,CIP-0093 Add Bosphorus weights to the 5N SV node on MainNet (#293),13,316.65,85.03,123.5,0.97,107.15
-89dbac3,2026-02-09T23:04:12+00:00,CIP-0061 Update Chainlink weight for the completed milestone (#296),13,316.65,92.03,116.5,0.97,107.15
-2e3e643,2026-02-09T23:07:34+00:00,CIP-0085 Update Talos weight for the completed milestone (#297),13,316.65,94.9383,113.5,1.0617,107.15
-41f566d,2026-03-13T19:40:18+00:00,CIP-0074 Update BitGo weight for the completed milestone (#300),13,316.65,97.805,110.5,1.195,107.15
-660e17e,2026-03-13T19:40:39+00:00,CIP-0091 Update Zenith weight for the completed milestone (#299),13,316.65,98.805,109.5,1.195,107.15
-12a282c,2026-03-24T17:43:03+00:00,Update Zero Hash and Ubyx weights for completed milestones (#308),13,316.65,99.805,108.5,1.195,107.15
-ee5d225,2026-03-29T02:25:46+00:00,CIP-0081 Add YZi Labs weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#307),13,326.65,99.805,118.5,1.195,107.15
-f968e68,2026-03-29T02:27:35+00:00,CIP-0106 Add QCP Group weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#304),13,325.65,99.805,118.5,1.195,106.15
-0b86207,2026-04-04T06:19:38+00:00,CIP-0086 Add ChainSafe weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#324),13,322.65,99.805,118.5,1.195,103.15
+2ae9ccd,2026-02-05T10:39:13+00:00,CIP-0093 Add Bosphorus weights to the 5N SV node on MainNet (#293),13,319.7,85.03,129.5,0.97,104.2
+89dbac3,2026-02-09T23:04:12+00:00,CIP-0061 Update Chainlink weight for the completed milestone (#296),13,319.7,92.03,122.5,0.97,104.2
+2e3e643,2026-02-09T23:07:34+00:00,CIP-0085 Update Talos weight for the completed milestone (#297),13,319.7,94.9383,119.5,1.0617,104.2
+41f566d,2026-03-13T19:40:18+00:00,CIP-0074 Update BitGo weight for the completed milestone (#300),13,319.7,97.805,116.5,1.195,104.2
+660e17e,2026-03-13T19:40:39+00:00,CIP-0091 Update Zenith weight for the completed milestone (#299),13,319.7,98.805,115.5,1.195,104.2
+12a282c,2026-03-24T17:43:03+00:00,Update Zero Hash and Ubyx weights for completed milestones (#308),13,319.7,99.805,114.5,1.195,104.2
+ee5d225,2026-03-29T02:25:46+00:00,CIP-0081 Add YZi Labs weight to the GSF SV node on MainNet [allow-total-reward-weight-change] (#307),13,329.7,99.805,124.5,1.195,104.2
+f968e68,2026-03-29T02:27:35+00:00,CIP-0106 Add QCP Group weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#304),13,334.7,99.805,129.5,1.195,104.2
+0b86207,2026-04-04T06:19:38+00:00,CIP-0086 Add ChainSafe weights to the 5N SV node on MainNet [allow-total-reward-weight-change] (#324),13,336.7,99.805,131.5,1.195,104.2
 b94ee3f,2026-04-11T05:18:35+00:00,correct weight field for extraBeneficiaries of 5n (#328),13,336.7,99.805,131.5,1.195,104.2
 abdcca5,2026-04-23T12:46:06+00:00,Add to extraBeneficiaries split for MPCH and Lukka locking wallets to the MPCH SV node on MainNet (#337),13,336.7,99.805,131.5,1.195,104.2
 8b26b1e,2026-04-23T14:42:33+00:00,CIP-0109 Add Visa weight to the MPC-Holding-Inc SV node on MainNet [allow-total-reward-weight-change] (#336),13,346.7,99.805,141.5,1.195,104.2

@@ -50,6 +50,14 @@ def parse(text):
         if m := NODE_RE.match(line):
             nodes.append({"name": m.group(1), "weight": 0.0, "beneficiaries": []})
             pending = None
+        elif (m := NODE_WEIGHT_RE.match(line)) and pending is not None:
+            # From 2026-02-05 to 2026-04-11 the Five North entries gave each
+            # beneficiary's weight as rewardWeightBps instead of weight (fixed
+            # in #328). Read it as the beneficiary weight it was meant to be.
+            pending["weight"] = int(m.group(1).replace("_", "")) / BPS
+            pending["wrong_field"] = True
+            nodes[-1]["beneficiaries"].append(pending)
+            pending = None
         elif (m := NODE_WEIGHT_RE.match(line)) and nodes:
             nodes[-1]["weight"] = int(m.group(1).replace("_", "")) / BPS
         elif (m := BENEFICIARY_RE.match(line)) and nodes:
@@ -103,7 +111,7 @@ def main(repo):
     log = git(repo, "log", "--reverse", "--format=%H|%cI|%s", "--", PATH)
     commits = [line.split("|", 2) for line in log.splitlines() if line]
 
-    rows, snaps = [], []
+    rows, snaps, wrong_field = [], [], []
     for sha, date, subject in commits:
         try:
             text = git(repo, "show", f"{sha}:{PATH}")
@@ -111,6 +119,8 @@ def main(repo):
             continue  # file deleted or renamed at this commit
         nodes = parse(text)
         hosts = ghost_hosts(nodes)
+        if any(b.get("wrong_field") for n in nodes for b in n["beneficiaries"]):
+            wrong_field.append(sha[:7])
         totals = {"active": 0.0, "escrow": 0.0, "unassigned": 0.0, "node": 0.0}
         for node in nodes:
             assigned = 0.0
@@ -149,6 +159,9 @@ def main(repo):
         w.writeheader()
         w.writerows(snaps)
     print(f"{len(snaps)} snapshots, {len(rows)} beneficiary rows -> {out}")
+    if wrong_field:
+        print(f"{len(wrong_field)} commits gave a beneficiary weight as rewardWeightBps:",
+              " ".join(wrong_field))
 
 
 if __name__ == "__main__":

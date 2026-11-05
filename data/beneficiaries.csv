@@ -2842,7 +2842,8 @@ a1484a9,2026-02-02T14:08:30+00:00,Five-North-1,(node operator),,3.05,node,,
 2ae9ccd,2026-02-05T10:39:13+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 2ae9ccd,2026-02-05T10:39:13+00:00,Proof-Group-1,(node operator),,1.25,node,,
 2ae9ccd,2026-02-05T10:39:13+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-2ae9ccd,2026-02-05T10:39:13+00:00,Five-North-1,(node operator),,6.0,node,,
+2ae9ccd,2026-02-05T10:39:13+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+2ae9ccd,2026-02-05T10:39:13+00:00,Five-North-1,(node operator),,3.05,node,,
 89dbac3,2026-02-09T23:04:12+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,0.97,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 89dbac3,2026-02-09T23:04:12+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 89dbac3,2026-02-09T23:04:12+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -2911,7 +2912,8 @@ a1484a9,2026-02-02T14:08:30+00:00,Five-North-1,(node operator),,3.05,node,,
 89dbac3,2026-02-09T23:04:12+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 89dbac3,2026-02-09T23:04:12+00:00,Proof-Group-1,(node operator),,1.25,node,,
 89dbac3,2026-02-09T23:04:12+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-89dbac3,2026-02-09T23:04:12+00:00,Five-North-1,(node operator),,6.0,node,,
+89dbac3,2026-02-09T23:04:12+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+89dbac3,2026-02-09T23:04:12+00:00,Five-North-1,(node operator),,3.05,node,,
 2e3e643,2026-02-09T23:07:34+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.0617,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 2e3e643,2026-02-09T23:07:34+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 2e3e643,2026-02-09T23:07:34+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -2980,7 +2982,8 @@ a1484a9,2026-02-02T14:08:30+00:00,Five-North-1,(node operator),,3.05,node,,
 2e3e643,2026-02-09T23:07:34+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 2e3e643,2026-02-09T23:07:34+00:00,Proof-Group-1,(node operator),,1.25,node,,
 2e3e643,2026-02-09T23:07:34+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-2e3e643,2026-02-09T23:07:34+00:00,Five-North-1,(node operator),,6.0,node,,
+2e3e643,2026-02-09T23:07:34+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+2e3e643,2026-02-09T23:07:34+00:00,Five-North-1,(node operator),,3.05,node,,
 41f566d,2026-03-13T19:40:18+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.195,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 41f566d,2026-03-13T19:40:18+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 41f566d,2026-03-13T19:40:18+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -3050,7 +3053,8 @@ a1484a9,2026-02-02T14:08:30+00:00,Five-North-1,(node operator),,3.05,node,,
 41f566d,2026-03-13T19:40:18+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 41f566d,2026-03-13T19:40:18+00:00,Proof-Group-1,(node operator),,1.25,node,,
 41f566d,2026-03-13T19:40:18+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-41f566d,2026-03-13T19:40:18+00:00,Five-North-1,(node operator),,6.0,node,,
+41f566d,2026-03-13T19:40:18+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+41f566d,2026-03-13T19:40:18+00:00,Five-North-1,(node operator),,3.05,node,,
 660e17e,2026-03-13T19:40:39+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.195,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 660e17e,2026-03-13T19:40:39+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 660e17e,2026-03-13T19:40:39+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -3121,7 +3125,8 @@ a1484a9,2026-02-02T14:08:30+00:00,Five-North-1,(node operator),,3.05,node,,
 660e17e,2026-03-13T19:40:39+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 660e17e,2026-03-13T19:40:39+00:00,Proof-Group-1,(node operator),,1.25,node,,
 660e17e,2026-03-13T19:40:39+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-660e17e,2026-03-13T19:40:39+00:00,Five-North-1,(node operator),,6.0,node,,
+660e17e,2026-03-13T19:40:39+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+660e17e,2026-03-13T19:40:39+00:00,Five-North-1,(node operator),,3.05,node,,
 12a282c,2026-03-24T17:43:03+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.195,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 12a282c,2026-03-24T17:43:03+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 12a282c,2026-03-24T17:43:03+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -3192,7 +3197,8 @@ a1484a9,2026-02-02T14:08:30+00:00,Five-North-1,(node operator),,3.05,node,,
 12a282c,2026-03-24T17:43:03+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 12a282c,2026-03-24T17:43:03+00:00,Proof-Group-1,(node operator),,1.25,node,,
 12a282c,2026-03-24T17:43:03+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-12a282c,2026-03-24T17:43:03+00:00,Five-North-1,(node operator),,6.0,node,,
+12a282c,2026-03-24T17:43:03+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+12a282c,2026-03-24T17:43:03+00:00,Five-North-1,(node operator),,3.05,node,,
 ee5d225,2026-03-29T02:25:46+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.195,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 ee5d225,2026-03-29T02:25:46+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 ee5d225,2026-03-29T02:25:46+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -3264,7 +3270,8 @@ ee5d225,2026-03-29T02:25:46+00:00,Tradeweb-Markets-1,(node operator),,10.0,node,
 ee5d225,2026-03-29T02:25:46+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 ee5d225,2026-03-29T02:25:46+00:00,Proof-Group-1,(node operator),,1.25,node,,
 ee5d225,2026-03-29T02:25:46+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-ee5d225,2026-03-29T02:25:46+00:00,Five-North-1,(node operator),,6.0,node,,
+ee5d225,2026-03-29T02:25:46+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+ee5d225,2026-03-29T02:25:46+00:00,Five-North-1,(node operator),,3.05,node,,
 f968e68,2026-03-29T02:27:35+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.195,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 f968e68,2026-03-29T02:27:35+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 f968e68,2026-03-29T02:27:35+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -3336,7 +3343,9 @@ f968e68,2026-03-29T02:27:35+00:00,Tradeweb-Markets-1,(node operator),,10.0,node,
 f968e68,2026-03-29T02:27:35+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 f968e68,2026-03-29T02:27:35+00:00,Proof-Group-1,(node operator),,1.25,node,,
 f968e68,2026-03-29T02:27:35+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-f968e68,2026-03-29T02:27:35+00:00,Five-North-1,(node operator),,5.0,node,,
+f968e68,2026-03-29T02:27:35+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+f968e68,2026-03-29T02:27:35+00:00,Five-North-1,qcp-ghost-1,12207f131d49,5.0,escrow,0106,QCP Group (QCP)  CIP-0106 # escrow party_id hosted on 5nghost-mainnet-1
+f968e68,2026-03-29T02:27:35+00:00,Five-North-1,(node operator),,3.05,node,,
 0b86207,2026-04-04T06:19:38+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.195,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 0b86207,2026-04-04T06:19:38+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 0b86207,2026-04-04T06:19:38+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,
@@ -3408,7 +3417,10 @@ f968e68,2026-03-29T02:27:35+00:00,Five-North-1,(node operator),,5.0,node,,
 0b86207,2026-04-04T06:19:38+00:00,C7-Technology-Services-Limited,(node operator),,10.575,node,,
 0b86207,2026-04-04T06:19:38+00:00,Proof-Group-1,(node operator),,1.25,node,,
 0b86207,2026-04-04T06:19:38+00:00,Liberty-City-Ventures-1,(node operator),,10.0,node,,
-0b86207,2026-04-04T06:19:38+00:00,Five-North-1,(node operator),,2.0,node,,
+0b86207,2026-04-04T06:19:38+00:00,Five-North-1,bsv-ghost-1,12207f131d49,6.0,escrow,0093,Bosphorus SV (BSV)  CIP-0093 # escrow party_id hosted on 5nghost-mainnet-1
+0b86207,2026-04-04T06:19:38+00:00,Five-North-1,qcp-ghost-1,12207f131d49,5.0,escrow,0106,QCP Group (QCP)  CIP-0106 # escrow party_id hosted on 5nghost-mainnet-1
+0b86207,2026-04-04T06:19:38+00:00,Five-North-1,chainsafe-ghost-1,12207f131d49,2.0,escrow,0086,ChainSafe  CIP-0086 # escrow party_id hosted on 5nghost-mainnet-1
+0b86207,2026-04-04T06:19:38+00:00,Five-North-1,(node operator),,3.05,node,,
 b94ee3f,2026-04-11T05:18:35+00:00,Global-Synchronizer-Foundation,GhostSV-validator-1,1220f5cf298f,1.195,unassigned,,All weight not assigned to any particular SV is added to the GhostSV-validator-1; 0.05 (Ubyx) + 0.92 (Fireblocks)
 b94ee3f,2026-04-11T05:18:35+00:00,Global-Synchronizer-Foundation,GSF-SVRewards-1,12201725270d,10.0,active,,
 b94ee3f,2026-04-11T05:18:35+00:00,Global-Synchronizer-Foundation,validator_Broadridge,1220b0008ea5,10.0,active,,

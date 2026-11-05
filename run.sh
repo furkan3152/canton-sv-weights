@@ -9,6 +9,7 @@ python3 src/lifecycle.py
 python3 src/deadlines.py > /dev/null
 python3 src/dilution.py > /dev/null
 python3 src/mints.py > /dev/null
+python3 src/onchain_check.py > /dev/null
 python3 src/plot_weight_classes.py > /dev/null
 python3 src/plot_escrow_status.py > /dev/null
 python3 -m unittest discover -s tests
